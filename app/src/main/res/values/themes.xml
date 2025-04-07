@@ -13,4 +13,14 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="Theme.Matule.Starting" parent="Theme.SplashScreen">
+        <!-- Задайте цвет фона SplashScreen -->
+        <item name="windowSplashScreenBackground">#48B2E7</item>
+
+        <!-- Задайте иконку SplashScreen (если нужно) -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.Matule
+        </item> <!-- Тема после SplashScreen -->
+    </style>
 </resources>
