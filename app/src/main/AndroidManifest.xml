@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Matule">
         <activity
-            android:name=".view.activities.Launcher"
+            android:name=".Launcher"
             android:exported="true"
             android:theme="@style/Theme.Matule.Starting">
             <intent-filter>

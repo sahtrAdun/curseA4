@@ -1,4 +1,4 @@
-package dot.curse.matule.view.activities.ui.theme
+package dot.curse.matule.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
