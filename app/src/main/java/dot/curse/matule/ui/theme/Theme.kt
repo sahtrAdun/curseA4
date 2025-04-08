@@ -103,7 +103,7 @@ val unspecified_scheme = ColorFamily(
 @SuppressLint("ObsoleteSdkInt")
 @Composable
 fun MatuleTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = false,
     dynamicColor: Boolean = false,
     content: @Composable() () -> Unit
 ) {

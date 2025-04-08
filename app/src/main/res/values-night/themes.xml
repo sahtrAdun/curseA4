@@ -15,11 +15,8 @@
     </style>
 
     <style name="Theme.Matule.Starting" parent="Theme.SplashScreen">
-        <!-- Задайте цвет фона SplashScreen -->
         <item name="windowSplashScreenBackground">#48B2E7</item>
-
-        <!-- Задайте иконку SplashScreen (если нужно) -->
-        <item name="windowSplashScreenAnimatedIcon">@drawable/logo</item>
-        <item name="postSplashScreenTheme">@style/Theme.Matule</item> <!-- Тема после SplashScreen -->
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.Matule</item>
     </style>
 </resources>
