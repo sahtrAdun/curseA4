@@ -9,10 +9,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import dagger.hilt.android.AndroidEntryPoint
+import dot.curse.matule.data.storage.SharedManager
 import dot.curse.matule.ui.theme.MatuleTheme
-import kotlinx.coroutines.delay
 
-class Launcher : ComponentActivity() {
+@AndroidEntryPoint
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -25,7 +27,18 @@ class Launcher : ComponentActivity() {
             MatuleTheme {
 
                 LaunchedEffect(Unit) {
-                    delay(1500)
+                    val shared = SharedManager(this@MainActivity)
+                    val userId = shared.getSharedUserId()
+                    val firstTime = shared.getSharedFirstTime()
+
+                    if (firstTime) {
+                        // TODO Переход к Onboarding
+                    } else if (userId == -1) {
+                        // TODO Переход к Sign
+                    } else {
+                        // TODO Переход к Main
+                    }
+
                     loading = false
                 }
 

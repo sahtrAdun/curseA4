@@ -1,7 +1,8 @@
-package dot.curse.matule.data.api
+package dot.curse.matule.data.repository
 
-import dot.curse.matule.data.model.users.UserDot
-import dot.curse.matule.data.model.users.UserPost
+import dot.curse.matule.domain.model.user.UserDot
+import dot.curse.matule.domain.model.user.UserPost
+import dot.curse.matule.domain.repository.ApiRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -11,15 +12,15 @@ import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import javax.inject.Inject
 
-class ApiClient @Inject constructor(
+class ApiRepositoryImpl @Inject constructor(
     private val client: HttpClient
-) {
+): ApiRepository {
+
     companion object {
         const val COLLECTION_USERS = "rest/v1/users"
-        const val COLLECTION_SHOES = "rest/v1/shoes"
     }
 
-    suspend fun getAllUsers(): Result<List<UserDot>> {
+    override suspend fun getAllUsers(): Result<List<UserDot>> {
         return try {
             client.get("/$COLLECTION_USERS") {
                 parameter("select", "*")
@@ -32,7 +33,7 @@ class ApiClient @Inject constructor(
         }
     }
 
-    suspend fun getUserById(userId: Int): Result<UserDot> {
+    override suspend fun getUserById(userId: Int): Result<UserDot> {
         return try {
             client.get("/$COLLECTION_USERS") {
                 parameter("id", "eq.$userId")
@@ -45,7 +46,7 @@ class ApiClient @Inject constructor(
         }
     }
 
-    suspend fun addUser(user: UserPost): Result<UserDot> {
+    override suspend fun addUser(user: UserPost): Result<UserDot> {
         return try {
             client.post("/$COLLECTION_USERS") {
                 setBody(user)
@@ -58,7 +59,7 @@ class ApiClient @Inject constructor(
         }
     }
 
-    suspend fun updateUser(user: UserPost): Result<UserDot> {
+    override suspend fun updateUser(user: UserPost): Result<UserDot> {
         return try {
             client.put("/$COLLECTION_USERS") {
                 setBody(user)
@@ -71,7 +72,7 @@ class ApiClient @Inject constructor(
         }
     }
 
-    suspend fun getUserByEmail(email: String): Result<UserDot> {
+    override suspend fun getUserByEmail(email: String): Result<UserDot> {
         return try {
             client.get("/$COLLECTION_USERS") {
                 parameter("email", "eq.$email")
@@ -84,7 +85,7 @@ class ApiClient @Inject constructor(
         }
     }
 
-    suspend fun checkUserExists(email: String, password: String): Result<Boolean> {
+    override suspend fun checkUserExists(email: String, password: String): Result<Boolean> {
         return try {
             client.get("/$COLLECTION_USERS") {
                 parameter("email", "eq.$email")

@@ -1,4 +1,4 @@
-package dot.curse.matule.data.model.users
+package dot.curse.matule.domain.model.user
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

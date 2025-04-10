@@ -4,6 +4,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
 
 object HttpClientProvider {
@@ -17,8 +18,8 @@ object HttpClientProvider {
         defaultRequest {
             url(BASE_URL)
             headers.append("api_key", API_KEY)
-            headers.append("Authorization", "Bearer $API_KEY")
-            headers.append("Content-Type", "application/json")
+            headers.append(HttpHeaders.Authorization, "Bearer $API_KEY")
+            headers.append(HttpHeaders.ContentType, "application/json")
         }
 
     }
