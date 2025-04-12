@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="board_head_1">Добро пожаловать</string>
+    <string name="board_head_2">Начнем путешествие</string>
+    <string name="board_text_2">Умная, великолепная и модная коллекция Изучите сейчас</string>
+    <string name="board_head_3">У вас есть сила, чтобы</string>
+    <string name="board_text_3">В вашей комнате много красивых и привлекательных растений</string>
+    <string name="b_next">Далее</string>
+    <string name="b_start">Начать</string>
+    <string name="b_text_skip">Пропустить</string>
+</resources>

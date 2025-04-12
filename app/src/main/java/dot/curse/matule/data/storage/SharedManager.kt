@@ -2,39 +2,47 @@ package dot.curse.matule.data.storage
 
 import android.content.Context
 import androidx.core.content.edit
-import dot.curse.matule.domain.model.user.User
+/*import dot.curse.matule.domain.model.user.User
 import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.Json*/
 
 class SharedManager(context: Context) {
     private val sharedPreferences = context.getSharedPreferences("Matule", Context.MODE_PRIVATE)
 
-    fun getSharedUserId(): Int {
+    fun getLocalUserId(): Int {
         return sharedPreferences.getInt("user_id", -1)
     }
 
-    fun setSharedUserId(value: Int) {
+    /*fun setLocalUserId(value: Int) {
         sharedPreferences.edit { putInt("user_id", value) }
-    }
+    }*/
 
-    fun getSharedFirstTime(): Boolean {
+    fun getLocalFirstTime(): Boolean {
         return sharedPreferences.getBoolean("first_time", true)
     }
 
-    fun setSharedFirstTime(value: Boolean) {
+    fun setLocalFirstTime(value: Boolean) {
         sharedPreferences.edit { putBoolean("first_time", value) }
     }
 
-    fun getSharedCurrentUser(): User {
+    /*fun getLocalCurrentUser(): User {
         val shared = sharedPreferences.getString("current_user", null)?: ""
         return Json.decodeFromString<User>(shared)
     }
 
-    fun setSharedCurrentUser(user: User) {
+    fun setLocalCurrentUser(user: User) {
         Json.encodeToString<User>(user).let {
             sharedPreferences.edit { putString("current_user", it) }
         }
+    }*/
+
+    fun getDarkTheme(): Boolean {
+        return sharedPreferences.getBoolean("dark_theme", false)
     }
+
+    /*fun setDarkTheme(value: Boolean) {
+        sharedPreferences.edit { putBoolean("dark_theme", value) }
+    }*/
 
 
 }

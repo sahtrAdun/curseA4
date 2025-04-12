@@ -12,37 +12,37 @@ class UserRepositoryImpl @Inject constructor(
 ) : UserRepository {
 
     override suspend fun getAllUsers(): Result<List<User>> {
-        val userDtoResult = api.getAllUsers()
-        return userDtoResult.map { userDtoList ->
-            userDtoList.map { it.toUser() }
+        val userDotResult = api.getAllUsers()
+        return userDotResult.map { userDotList ->
+            userDotList.map { it.toUser() }
         }
     }
 
     override suspend fun getUserById(userId: Int): Result<User> {
-        val userDtoResult = api.getUserById(userId)
-        return userDtoResult.map { userDto ->
-            userDto.toUser()
+        val userDotResult = api.getUserById(userId)
+        return userDotResult.map { userDot ->
+            userDot.toUser()
         }
     }
 
     override suspend fun addUser(user: UserPost): Result<User> {
-        val userDtoResult = api.addUser(user)
-        return userDtoResult.map { userDto ->
-            userDto.toUser()
+        val userDotResult = api.addUser(user)
+        return userDotResult.map { userDot ->
+            userDot.toUser()
         }
     }
 
     override suspend fun updateUser(user: UserPost): Result<User> {
-        val userDtoResult = api.updateUser(user)
-        return userDtoResult.map { userDto ->
-            userDto.toUser()
+        val userDotResult = api.updateUser(user)
+        return userDotResult.map { userDot ->
+            userDot.toUser()
         }
     }
 
     override suspend fun getUserByEmail(email: String): Result<User> {
-        val userDtoResult = api.getUserByEmail(email)
-        return userDtoResult.map { userDto ->
-            userDto.toUser()
+        val userDotResult = api.getUserByEmail(email)
+        return userDotResult.map { userDot ->
+            userDot.toUser()
         }
     }
 

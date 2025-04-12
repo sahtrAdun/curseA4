@@ -1,4 +1,12 @@
 <resources>
-    <string name="app_name">Matule</string>
-    <string name="title_activity_launcher">Launcher</string>
+    <string name="app_name" translatable="false">Matule</string>
+    <string name="title_activity_launcher" translatable="false">Launcher</string>
+    <string name="board_head_1">Wellcome</string>
+    <string name="board_head_2">Let’s Start Journey</string>
+    <string name="board_text_2">Smart, Gorgeous and Fashionable Collection Explor Now</string>
+    <string name="board_head_3">You Have the Power To</string>
+    <string name="board_text_3">There Are Many Beautiful And Attractive Plants To Your Room</string>
+    <string name="b_next">Next</string>
+    <string name="b_start">Start</string>
+    <string name="b_text_skip">Skip</string>
 </resources>
