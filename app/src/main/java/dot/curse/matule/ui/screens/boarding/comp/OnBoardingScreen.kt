@@ -13,13 +13,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,6 +43,7 @@ import androidx.navigation.NavController
 import dot.curse.matule.ui.screens.boarding.OnBoardingViewModel
 import dot.curse.matule.R
 import dot.curse.matule.ui.items.MatuleButton
+import dot.curse.matule.ui.utils.Adaptive
 
 @Composable
 fun OnBoardingScreen(
@@ -66,7 +69,8 @@ fun OnBoardingScreen(
         Column(modifier = Modifier
             .weight(1f)
             .animateContentSize(),
-            verticalArrangement = Arrangement.spacedBy(40.dp, Alignment.CenterVertically)
+            verticalArrangement = Arrangement.spacedBy(40.dp, Alignment.CenterVertically),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             HorizontalPager(
                 state = pagerState,
@@ -83,15 +87,18 @@ fun OnBoardingScreen(
                     enter = fadeIn(),
                     exit = fadeOut()
                 ) {
-                    Column(modifier = Modifier.alpha(alpha),
+                    Column(modifier = Modifier
+                        .fillMaxWidth()
+                        .alpha(alpha)
+                        .verticalScroll(rememberScrollState()),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically)
                     ) {
                         Image(
                             painter = painterResource(state.pages[page].image),
                             contentDescription = null,
-                            modifier = Modifier
-                                .size(375.dp, 302.dp)
+                            modifier = Adaptive().adaptiveImageWidth()
+                                .aspectRatio(1f)
                                 .padding(bottom = 40.dp)
                         )
                         Text(
@@ -128,9 +135,11 @@ fun OnBoardingScreen(
         Column(modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp)
-            .animateContentSize()
+            .animateContentSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             MatuleButton(
+                modifier = Adaptive().adaptiveButtonWidth(),
                 text = state.pages[pagerState.currentPage].buttonText,
                 background = MaterialTheme.colorScheme.onPrimary,
                 tint = MaterialTheme.colorScheme.scrim,
@@ -143,7 +152,6 @@ fun OnBoardingScreen(
                     style = MaterialTheme.typography.bodySmall,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
-                        .fillMaxWidth()
                         .padding(top = 30.dp)
                         .clickable(null ,null) { viewModel.apply { scope.skipToLast(pagerState) }
                     }

@@ -4,6 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -11,6 +14,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -45,10 +49,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
-            var label by remember { mutableStateOf("") }
-            var show by remember { mutableStateOf(false) }
 
             val backColor = MaterialTheme.colorScheme.background
+            var label by remember { mutableStateOf("") }
+            var show by remember { mutableStateOf(false) }
+            var headerPlaceholder by remember { mutableStateOf(backColor) }
+
             var background by remember { mutableStateOf(backColor) }
 
             var darkTheme by remember { mutableStateOf(
@@ -62,7 +68,8 @@ class MainActivity : ComponentActivity() {
                     topBar = {
                         MatuleHeader(
                             show = show,
-                            label = label
+                            label = label,
+                            placeholder = headerPlaceholder
                         )
                     },
                     bottomBar = {}
@@ -70,7 +77,13 @@ class MainActivity : ComponentActivity() {
                     NavHost(
                         modifier = Modifier.padding(pd),
                         navController = navController,
-                        startDestination = SplashScreenRoute
+                        startDestination = SplashScreenRoute,
+                        enterTransition = {
+                            fadeIn(animationSpec = tween(100))
+                        },
+                        exitTransition = {
+                            fadeOut(animationSpec = tween(100))
+                        },
                     ) {
 
                         composable<SplashScreenRoute> {
@@ -78,6 +91,8 @@ class MainActivity : ComponentActivity() {
                             val headerState by viewModel.headerState.collectAsStateWithLifecycle()
                             label = headerState.label
                             show = headerState.show
+                            headerPlaceholder = MaterialTheme.colorScheme.primary
+                            loading = !viewModel.state.value.loadingEnd
 
                             SplashScreen(
                                 viewModel = viewModel,
@@ -90,7 +105,9 @@ class MainActivity : ComponentActivity() {
                             val headerState by viewModel.headerState.collectAsStateWithLifecycle()
                             label = headerState.label
                             show = headerState.show
-                            background = MaterialTheme.colorScheme.primary
+                            headerPlaceholder = MaterialTheme.colorScheme.primary
+                            background = MaterialTheme.colorScheme.tertiary
+                            loading = false
 
                             OnBoardingScreen(
                                 viewModel = viewModel,
@@ -101,12 +118,14 @@ class MainActivity : ComponentActivity() {
                         composable<SignInRoute> {
 
                             background = MaterialTheme.colorScheme.surface
+                            headerPlaceholder = background
                             // TODO
                         }
 
                         composable<MainRoute> {
 
                             background = MaterialTheme.colorScheme.background
+                            headerPlaceholder = background
                             // TODO
                         }
 

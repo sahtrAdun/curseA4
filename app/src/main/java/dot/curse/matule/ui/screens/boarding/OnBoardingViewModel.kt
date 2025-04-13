@@ -2,6 +2,8 @@ package dot.curse.matule.ui.screens.boarding
 
 import android.content.Context
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
@@ -33,7 +35,7 @@ class OnBoardingViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             headerState.update {
-                it.copy(show = false, label = "OnBoardingNull")
+                it.copy(show = false, label = "OnBoardingNull", placeholderColor = lightColorScheme().primary)
             }
             _state.update {
                 it.copy(
