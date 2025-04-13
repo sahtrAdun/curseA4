@@ -2,8 +2,6 @@ package dot.curse.matule.ui.screens.boarding
 
 import android.content.Context
 import androidx.compose.foundation.pager.PagerState
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
@@ -11,8 +9,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dot.curse.matule.R
 import dot.curse.matule.data.storage.SharedManager
-import dot.curse.matule.ui.items.HeaderState
-import dot.curse.matule.ui.items.HeaderViewModel
 import dot.curse.matule.ui.utils.SignInRoute
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,17 +22,14 @@ import javax.inject.Inject
 class OnBoardingViewModel @Inject constructor(
     private val shared: SharedManager,
     @ApplicationContext val context: Context
-) : ViewModel(), HeaderViewModel {
-    override val headerState = MutableStateFlow(HeaderState())
+) : ViewModel() {
+
 
     private val _state = MutableStateFlow<OnBoardingState>(OnBoardingState())
     val state: StateFlow<OnBoardingState> = _state.asStateFlow()
 
     init {
         viewModelScope.launch {
-            headerState.update {
-                it.copy(show = false, label = "OnBoardingNull", placeholderColor = lightColorScheme().primary)
-            }
             _state.update {
                 it.copy(
                     pages = listOf(
@@ -72,7 +65,7 @@ class OnBoardingViewModel @Inject constructor(
             if (pagerState.currentPage < pagerState.pageCount - 1) {
                 pagerState.animateScrollToPage(pagerState.currentPage + 1)
             } else {
-                shared.setLocalFirstTime(true)
+                shared.setLocalFirstTime(false)
                 navController.navigate(SignInRoute)
             }
         }

@@ -44,5 +44,13 @@ class SharedManager(context: Context) {
         sharedPreferences.edit { putBoolean("dark_theme", value) }
     }*/
 
+    fun getLanguage(): String? {
+        return sharedPreferences.getString("app_language_code", null)
+    }
+
+    fun setLanguage(lang: String) {
+        sharedPreferences.edit { putString("app_language_code", lang) }
+    }
+
 
 }

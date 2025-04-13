@@ -49,7 +49,7 @@ open class Adaptive {
 
     @SuppressLint("ModifierFactoryExtensionFunction")
     @Composable
-    fun adaptiveButtonWidth(): Modifier {
+    fun adaptiveElementWidthMedium(): Modifier {
         val screenSize = getScreenSize()
         return if (screenSize.screenWidth == ScreenSizeMetric.SMALL) {
             Modifier.fillMaxWidth()

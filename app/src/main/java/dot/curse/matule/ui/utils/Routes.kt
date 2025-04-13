@@ -2,6 +2,17 @@ package dot.curse.matule.ui.utils
 
 import kotlinx.serialization.Serializable
 
+enum class Routes(val patch: String) {
+    SplashScreenRoute("dot.curse.matule.ui.utils.SplashScreenRoute"),
+    OnBoardingRoute("dot.curse.matule.ui.utils.OnBoardingRoute"),
+    SignInRoute("dot.curse.matule.ui.utils.SignInRoute"),
+    SignUpRoute("dot.curse.matule.ui.utils.SignUpRoute"),
+    OTPEmailRoute("dot.curse.matule.ui.utils.OTPEmailRoute"),
+    OTPCodeRoute("dot.curse.matule.ui.utils.OTPCodeRoute"),
+    OTPNewPasswordRoute("dot.curse.matule.ui.utils.OTPNewPasswordRoute"),
+    MainRoute("dot.curse.matule.ui.utils.MainRoute"),
+}
+
 @Serializable
 data object SplashScreenRoute
 

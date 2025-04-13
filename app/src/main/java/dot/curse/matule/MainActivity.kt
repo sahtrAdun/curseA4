@@ -14,25 +14,27 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dot.curse.matule.data.storage.SharedManager
-import dot.curse.matule.ui.items.MatuleHeader
+import dot.curse.matule.ui.items.header.MatuleHeader
 import dot.curse.matule.ui.screens.boarding.OnBoardingViewModel
 import dot.curse.matule.ui.screens.boarding.comp.OnBoardingScreen
+import dot.curse.matule.ui.screens.signin.SignInViewModel
+import dot.curse.matule.ui.screens.signin.comp.SignInScreen
 import dot.curse.matule.ui.screens.splash.SplashViewModel
 import dot.curse.matule.ui.screens.splash.comp.SplashScreen
 import dot.curse.matule.ui.theme.MatuleTheme
 import dot.curse.matule.ui.utils.MainRoute
 import dot.curse.matule.ui.utils.OnBoardingRoute
+import dot.curse.matule.ui.utils.Routes
 import dot.curse.matule.ui.utils.SignInRoute
 import dot.curse.matule.ui.utils.SplashScreenRoute
 
@@ -49,14 +51,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
-
-            val backColor = MaterialTheme.colorScheme.background
-            var label by remember { mutableStateOf("") }
-            var show by remember { mutableStateOf(false) }
-            var headerPlaceholder by remember { mutableStateOf(backColor) }
-
-            var background by remember { mutableStateOf(backColor) }
-
+            var background by remember { mutableStateOf(Color.White) }
             var darkTheme by remember { mutableStateOf(
                 SharedManager(this).getDarkTheme()
             ) }
@@ -67,9 +62,8 @@ class MainActivity : ComponentActivity() {
                     containerColor = background,
                     topBar = {
                         MatuleHeader(
-                            show = show,
-                            label = label,
-                            placeholder = headerPlaceholder
+                            currentRoute = navController.currentBackStackEntry
+                                ?.destination?.route?: Routes.SplashScreenRoute.patch,
                         )
                     },
                     bottomBar = {}
@@ -78,21 +72,11 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(pd),
                         navController = navController,
                         startDestination = SplashScreenRoute,
-                        enterTransition = {
-                            fadeIn(animationSpec = tween(100))
-                        },
-                        exitTransition = {
-                            fadeOut(animationSpec = tween(100))
-                        },
+                        enterTransition = { fadeIn(animationSpec = tween(250)) },
+                        exitTransition = { fadeOut(animationSpec = tween(250)) },
                     ) {
-
                         composable<SplashScreenRoute> {
                             val viewModel = hiltViewModel<SplashViewModel>()
-                            val headerState by viewModel.headerState.collectAsStateWithLifecycle()
-                            label = headerState.label
-                            show = headerState.show
-                            headerPlaceholder = MaterialTheme.colorScheme.primary
-                            loading = !viewModel.state.value.loadingEnd
 
                             SplashScreen(
                                 viewModel = viewModel,
@@ -102,10 +86,6 @@ class MainActivity : ComponentActivity() {
 
                         composable<OnBoardingRoute> {
                             val viewModel = hiltViewModel<OnBoardingViewModel>()
-                            val headerState by viewModel.headerState.collectAsStateWithLifecycle()
-                            label = headerState.label
-                            show = headerState.show
-                            headerPlaceholder = MaterialTheme.colorScheme.primary
                             background = MaterialTheme.colorScheme.tertiary
                             loading = false
 
@@ -116,16 +96,21 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable<SignInRoute> {
-
+                            val viewModel = hiltViewModel<SignInViewModel>()
                             background = MaterialTheme.colorScheme.surface
-                            headerPlaceholder = background
-                            // TODO
+                            loading = false
+
+                            SignInScreen(
+                                viewModel = viewModel,
+                                navController = navController
+                            )
                         }
 
                         composable<MainRoute> {
 
                             background = MaterialTheme.colorScheme.background
-                            headerPlaceholder = background
+                            loading = false
+
                             // TODO
                         }
 

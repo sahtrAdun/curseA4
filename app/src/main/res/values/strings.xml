@@ -9,4 +9,11 @@
     <string name="b_next">Next</string>
     <string name="b_start">Start</string>
     <string name="b_text_skip">Skip</string>
+    <string name="er_password_len">The allowed password length is from 8 to 20 characters</string>
+    <string name="er_password_lat_only">The password must contain only Latin characters</string>
+    <string name="er_password_let_or_digit">The password must contain at least one number or letter</string>
+    <string name="er_password_spec_chars">Invalid special characters</string>
+    <string name="er_password_upper_case">The password must contain at least one capital letter</string>
+    <string name="er_email">Invalid email address</string>
+    <string name="header_sign_in">SignIn</string>
 </resources>

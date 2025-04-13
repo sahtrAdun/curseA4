@@ -8,4 +8,11 @@
     <string name="b_next">Далее</string>
     <string name="b_start">Начать</string>
     <string name="b_text_skip">Пропустить</string>
+    <string name="er_password_len">Допустимая длинна пароля от 8 до 20 символов</string>
+    <string name="er_password_lat_only">Пароль должен содержать только латинские символы</string>
+    <string name="er_password_let_or_digit">Пароль должен содержать хотя бы одну цифру или букву</string>
+    <string name="er_password_spec_chars">Недопустимые специальные знаки</string>
+    <string name="er_password_upper_case">Пароль должен содержать хотя бы одну заглавную букву</string>
+    <string name="er_email">Неверный адрес электронной почты</string>
+    <string name="header_sign_in">Вход</string>
 </resources>

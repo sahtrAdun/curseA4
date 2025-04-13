@@ -4,8 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dot.curse.matule.data.storage.SharedManager
-import dot.curse.matule.ui.items.HeaderState
-import dot.curse.matule.ui.items.HeaderViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,18 +14,13 @@ import javax.inject.Inject
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val shared: SharedManager
-) : ViewModel(), HeaderViewModel {
+) : ViewModel() {
 
     private val _state = MutableStateFlow<SplashState>(SplashState())
     val state: StateFlow<SplashState> = _state.asStateFlow()
 
-    override val headerState = MutableStateFlow(HeaderState())
-
     init {
         viewModelScope.launch {
-            headerState.update {
-                it.copy(show = false, label = "SplashNull")
-            }
             _state.update {
                 it.copy(
                     userId = shared.getLocalUserId(),

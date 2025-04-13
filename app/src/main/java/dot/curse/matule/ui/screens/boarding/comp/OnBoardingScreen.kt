@@ -139,7 +139,7 @@ fun OnBoardingScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             MatuleButton(
-                modifier = Adaptive().adaptiveButtonWidth(),
+                modifier = Adaptive().adaptiveElementWidthMedium(),
                 text = state.pages[pagerState.currentPage].buttonText,
                 background = MaterialTheme.colorScheme.onPrimary,
                 tint = MaterialTheme.colorScheme.scrim,
