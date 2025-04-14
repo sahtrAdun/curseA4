@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 fun MatuleButton(
     modifier: Modifier = Modifier,
     text: String,
+    active: Boolean = true,
     background: Color = MaterialTheme.colorScheme.primary,
     tint: Color = MaterialTheme.colorScheme.onPrimary,
     action: () -> Unit
@@ -30,14 +31,14 @@ fun MatuleButton(
         .heightIn(min = 50.dp)
         .clickable(null, null) { action() }
         .background(
-            color = background,
+            color = if (active) background else MaterialTheme.colorScheme.outline,
             shape = RoundedCornerShape(13.dp)
         ),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = text,
-            color = tint,
+            color = if (active) tint else MaterialTheme.colorScheme.outlineVariant,
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth().padding(15.dp)

@@ -2,9 +2,9 @@ package dot.curse.matule.data.storage
 
 import android.content.Context
 import androidx.core.content.edit
-/*import dot.curse.matule.domain.model.user.User
+import dot.curse.matule.domain.model.user.User
 import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json*/
+import kotlinx.serialization.json.Json
 
 class SharedManager(context: Context) {
     private val sharedPreferences = context.getSharedPreferences("Matule", Context.MODE_PRIVATE)
@@ -13,9 +13,9 @@ class SharedManager(context: Context) {
         return sharedPreferences.getInt("user_id", -1)
     }
 
-    /*fun setLocalUserId(value: Int) {
+    fun setLocalUserId(value: Int) {
         sharedPreferences.edit { putInt("user_id", value) }
-    }*/
+    }
 
     fun getLocalFirstTime(): Boolean {
         return sharedPreferences.getBoolean("first_time", true)
@@ -28,13 +28,13 @@ class SharedManager(context: Context) {
     /*fun getLocalCurrentUser(): User {
         val shared = sharedPreferences.getString("current_user", null)?: ""
         return Json.decodeFromString<User>(shared)
-    }
+    }*/
 
     fun setLocalCurrentUser(user: User) {
         Json.encodeToString<User>(user).let {
             sharedPreferences.edit { putString("current_user", it) }
         }
-    }*/
+    }
 
     fun getDarkTheme(): Boolean {
         return sharedPreferences.getBoolean("dark_theme", false)

@@ -5,11 +5,15 @@ import dot.curse.matule.domain.model.user.UserPost
 import dot.curse.matule.domain.repository.ApiRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.accept
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.contentType
 import javax.inject.Inject
 
 class ApiRepositoryImpl @Inject constructor(
@@ -46,12 +50,36 @@ class ApiRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun addUser(user: UserPost): Result<UserDot> {
+    /*override suspend fun addUser(user: UserPost): Result<UserDot> {
         return try {
-            client.post("/$COLLECTION_USERS") {
+            val response = client.post("/$COLLECTION_USERS") {
+                contentType(ContentType.Application.Json)
+                accept(ContentType.Application.Json)
                 setBody(user)
-            }.body<UserDot>().let { body ->
+            }
+            if (response.status == HttpStatusCode.OK) {
+                val body = response.body<UserDot>()
                 Result.success(body)
+            } else {
+                Result.failure(Exception("HTTP error: ${response.status}"))
+            }
+        } catch (e: Exception) {
+            println("Exception addUser($user):\n${e.message}")
+            Result.failure(e)
+        }
+    }*/
+
+    override suspend fun addUser(user: UserPost): Result<Boolean> {
+        return try {
+            val response = client.post("/$COLLECTION_USERS") {
+                contentType(ContentType.Application.Json)
+                accept(ContentType.Application.Json)
+                setBody(user)
+            }
+            if (response.status == HttpStatusCode.Created) {
+                Result.success(true)
+            } else {
+                Result.failure(Exception("HTTP error: ${response.status}"))
             }
         } catch (e: Exception) {
             println("Exception addUser($user):\n${e.message}")
@@ -74,10 +102,18 @@ class ApiRepositoryImpl @Inject constructor(
 
     override suspend fun getUserByEmail(email: String): Result<UserDot> {
         return try {
-            client.get("/$COLLECTION_USERS") {
+            val response = client.get("/$COLLECTION_USERS") {
                 parameter("email", "eq.$email")
-            }.body<UserDot>().let { body ->
-                Result.success(body)
+            }
+            if (response.status == HttpStatusCode.OK) {
+                val body = response.body<List<UserDot>>()
+                if (body.isNotEmpty()) {
+                    Result.success(body.first())
+                } else {
+                    Result.failure(NoSuchElementException("User with email $email not found"))
+                }
+            } else {
+                Result.failure(Exception("HTTP error: ${response.status}"))
             }
         } catch (e: Exception) {
             println("Exception getUserByEmail($email):\n${e.message}")
@@ -85,13 +121,13 @@ class ApiRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun checkUserExists(email: String, password: String): Result<Boolean> {
+    override suspend fun checkUserExists(email: String, password: String): Result<UserDot> {
         return try {
             client.get("/$COLLECTION_USERS") {
                 parameter("email", "eq.$email")
                 parameter("password", "eq.$password")
-            }.body<List<UserDot>>().let { body ->
-                Result.success(body.isNotEmpty())
+            }.body<UserDot>().let { body ->
+                Result.success(body)
             }
         } catch (e: Exception) {
             println("Exception checkUserExists($email, $password):\n${e.message}")

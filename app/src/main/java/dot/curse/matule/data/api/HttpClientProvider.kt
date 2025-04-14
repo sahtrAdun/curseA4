@@ -8,8 +8,9 @@ import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
 
 object HttpClientProvider {
-    private const val BASE_URL = ""
-    private const val API_KEY = ""
+    // Для работы нужно локально создать файл с переменными IGNORE_URL и IGNORE_KEY содержащих Supabase url и api key соответственно
+    private const val BASE_URL = IGNORE_URL
+    private const val API_KEY = IGNORE_KEY
 
     val client = HttpClient(CIO) {
         install(ContentNegotiation) {
@@ -17,9 +18,9 @@ object HttpClientProvider {
         }
         defaultRequest {
             url(BASE_URL)
-            headers.append("api_key", API_KEY)
-            headers.append(HttpHeaders.Authorization, "Bearer $API_KEY")
-            headers.append(HttpHeaders.ContentType, "application/json")
+            headers.append("apikey", API_KEY)
+            headers.append("Authorization", "Bearer $API_KEY")
+            headers.append("Content-Type", "application/json")
         }
 
     }

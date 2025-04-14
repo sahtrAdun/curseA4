@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dot.curse.matule.R
 import dot.curse.matule.data.storage.SharedManager
+import dot.curse.matule.ui.utils.OnBoardingRoute
 import dot.curse.matule.ui.utils.SignInRoute
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -66,7 +67,11 @@ class OnBoardingViewModel @Inject constructor(
                 pagerState.animateScrollToPage(pagerState.currentPage + 1)
             } else {
                 shared.setLocalFirstTime(false)
-                navController.navigate(SignInRoute)
+                navController.navigate(SignInRoute) {
+                    popUpTo(SignInRoute)
+                    launchSingleTop = true
+                }
+
             }
         }
     }

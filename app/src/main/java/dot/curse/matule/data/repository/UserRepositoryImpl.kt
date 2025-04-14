@@ -25,11 +25,9 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun addUser(user: UserPost): Result<User> {
+    override suspend fun addUser(user: UserPost): Result<Boolean> {
         val userDotResult = api.addUser(user)
-        return userDotResult.map { userDot ->
-            userDot.toUser()
-        }
+        return userDotResult
     }
 
     override suspend fun updateUser(user: UserPost): Result<User> {
@@ -46,8 +44,11 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun checkUserExists(email: String, password: String): Result<Boolean> {
-        return api.checkUserExists(email, password)
+    override suspend fun checkUserExists(email: String, password: String): Result<User> {
+        val userDotResult = api.checkUserExists(email, password)
+        return userDotResult.map { userDot ->
+            userDot.toUser()
+        }
     }
 
 

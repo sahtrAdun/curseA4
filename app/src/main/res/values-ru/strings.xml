@@ -15,4 +15,26 @@
     <string name="er_password_upper_case">Пароль должен содержать хотя бы одну заглавную букву</string>
     <string name="er_email">Неверный адрес электронной почты</string>
     <string name="header_sign_in">Вход</string>
+    <string name="signin_title">Привет!</string>
+    <string name="signin_text">Заполните Свои данные или продолжите через социальные медиа</string>
+    <string name="email">Электронная почта</string>
+    <string name="password">Пароль</string>
+    <string name="signin_restore">Востановить пароль</string>
+    <string name="signin_first_time">Вы впервые?</string>
+    <string name="signin_create_account">Создать аккаунт</string>
+    <string name="b_signin">Войти</string>
+    <string name="header_sign_up">Регистрация</string>
+    <string name="signup_title">Зарегистрироваться</string>
+    <string name="signup_text">Заполните Свои данные или продолжите через социальные медиа</string>
+    <string name="signup_permission">Даю согласие на обработку персональных данных</string>
+    <string name="signup_have_account">Есть аккаунт?</string>
+    <string name="signup_login">Войти</string>
+    <string name="signup_name">Ваше имя</string>
+    <string name="b_signup">Зарегистрироваться</string>
+    <string name="er_name_len">Допустимая длинна имени от 8 до 20 символов</string>
+    <string name="er_name_spec">Имя не должно содержать цифры или специальные символы</string>
+    <string name="er_name_upper">Имя должно писаться с заглавной буквы</string>
+    <string name="er_signup_email">Пользователь с таким Email уже существует</string>
+    <string name="success_signup">Хорошо! Теперь войдите используя эти данные</string>
+    <string name="er_signup_confirm">Подтвердите нашу политику конфиденциальности</string>
 </resources>

@@ -16,4 +16,26 @@
     <string name="er_password_upper_case">The password must contain at least one capital letter</string>
     <string name="er_email">Invalid email address</string>
     <string name="header_sign_in">SignIn</string>
+    <string name="signin_title">Hello!</string>
+    <string name="signin_text">Fill your details or continue with social media</string>
+    <string name="email">Email Address</string>
+    <string name="password">Password</string>
+    <string name="signin_restore">Recovery password</string>
+    <string name="signin_first_time">New User?</string>
+    <string name="signin_create_account">Create Account</string>
+    <string name="b_signin">Login</string>
+    <string name="header_sign_up">SignUp</string>
+    <string name="signup_title">Sign up</string>
+    <string name="signup_text">Fill your details or continue with social media</string>
+    <string name="signup_permission">I agree to the processing of personal data</string>
+    <string name="signup_have_account">Already Have Account?</string>
+    <string name="signup_login">Log In</string>
+    <string name="signup_name">Your Name</string>
+    <string name="b_signup">Sign up</string>
+    <string name="er_name_len">The allowed name length is from 8 to 20 characters</string>
+    <string name="er_name_spec">The name must not contain numbers or special characters</string>
+    <string name="er_name_upper">The name must be written with a capital letter</string>
+    <string name="er_signup_email">User with this Email is already exists</string>
+    <string name="success_signup">Good! Now login with this data</string>
+    <string name="er_signup_confirm">Confirm our privacy policy</string>
 </resources>

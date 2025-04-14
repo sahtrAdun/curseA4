@@ -21,13 +21,15 @@ class SplashViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            val userId = shared.getLocalUserId()
+            val firstTime = shared.getLocalFirstTime()
             _state.update {
                 it.copy(
-                    userId = shared.getLocalUserId(),
-                    firstTime = shared.getLocalFirstTime(),
+                    userId = userId,
+                    firstTime = firstTime,
                     nextScreen = when {
-                        state.value.firstTime -> SplashStateNextScreens.OnBoarding
-                        state.value.userId == -1 -> SplashStateNextScreens.Sign
+                        firstTime -> SplashStateNextScreens.OnBoarding
+                        userId == -1 -> SplashStateNextScreens.Sign
                         else -> SplashStateNextScreens.Main
                     },
                     loadingEnd = true

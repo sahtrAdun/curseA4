@@ -26,7 +26,11 @@ fun UserDot.toUser(): User {
         email = this.email?: "null",
         phone = this.phone?: "null",
         password = this.password?: "null",
-        paymentMethods = Json.decodeFromString<List<String>>(this.paymentMethods?: ""),
+        paymentMethods = if (!this.paymentMethods.isNullOrEmpty()) {
+            Json.decodeFromString<List<String>>(this.paymentMethods)
+        } else {
+            emptyList()
+        },
         avatar = this.avatar?: "null",
         date = this.date?: "null",
     )

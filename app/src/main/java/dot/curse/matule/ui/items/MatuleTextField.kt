@@ -3,7 +3,6 @@ package dot.curse.matule.ui.items
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
@@ -11,15 +10,10 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -32,6 +26,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -39,6 +35,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dot.curse.matule.R
 
 @Composable
 fun MatuleTextField(
@@ -55,14 +52,14 @@ fun MatuleTextField(
     actions: KeyboardActions = KeyboardActions(),
     options: KeyboardOptions = KeyboardOptions(keyboardType = type, imeAction = actionType),
     background: Color = Color.Transparent,
-    tint: Color = MaterialTheme.colorScheme.outline,
+    tint: Color = MaterialTheme.colorScheme.outlineVariant,
     leadingContent: @Composable () -> Unit = {}
 ) {
     var isVisible by remember { mutableStateOf(false) }
     val isPassword = visual == PasswordVisualTransformation()
     val textStyle = TextStyle(
         color = if (!error) tint else MaterialTheme.colorScheme.error,
-        fontSize = 14.sp
+        fontSize = 15.sp
     )
 
     Row(modifier = modifier
@@ -102,7 +99,9 @@ fun MatuleTextField(
                     if (value.isEmpty()) {
                         Text(
                             text = placeholder,
-                            style = textStyle,
+                            style = textStyle.copy(
+                                color = MaterialTheme.colorScheme.outline
+                            ),
                             maxLines = 1,
                             modifier = Modifier
                                 .padding(start = 1.dp)
@@ -114,9 +113,9 @@ fun MatuleTextField(
         )
         if (isPassword) {
             Icon(
-                imageVector = Icons.Default.Lock,
+                imageVector = ImageVector.vectorResource( if (isVisible) R.drawable.eye_open else R.drawable.eye_close),
                 contentDescription = null,
-                tint = if (error) MaterialTheme.colorScheme.error else if (isVisible) MaterialTheme.colorScheme.primary else tint,
+                tint = if (error) MaterialTheme.colorScheme.error else if (isVisible) MaterialTheme.colorScheme.onBackground else tint,
                 modifier = Modifier
                     .fillMaxHeight()
                     .aspectRatio(1f)

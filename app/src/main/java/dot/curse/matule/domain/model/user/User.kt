@@ -25,7 +25,9 @@ fun User.toUserPost(): UserPost {
         email = this.email,
         phone = this.phone,
         password = this.password,
-        paymentMethods = Json.encodeToString<List<String>>(this.paymentMethods),
+        paymentMethods = if (this.paymentMethods.isNotEmpty()) {
+            Json.encodeToString<List<String>>(this.paymentMethods)
+        } else "",
         avatar = this.avatar,
     )
 }
