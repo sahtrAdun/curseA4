@@ -37,4 +37,16 @@
     <string name="er_signup_email">Пользователь с таким Email уже существует</string>
     <string name="success_signup">Хорошо! Теперь войдите используя эти данные</string>
     <string name="er_signup_confirm">Подтвердите нашу политику конфиденциальности</string>
+    <string name="er_signin_email">Пользователя с таким email/паролем не существует</string>
+    <string name="er_otpemail_exist">Пользователя с таким email не существует</string>
+    <string name="otpemail_title">Забыл пароль</string>
+    <string name="otpemail_text">Введите свою учетную запись  для сброса</string>
+    <string name="b_otpemail">Отправить</string>
+    <string name="otpemail_popup_title">Проверьте Ваш Email</string>
+    <string name="otpemail_popup_text">Мы отправили код восстановления пароля на вашу электронную почту.</string>
+    <string name="er_password_weak">Пароль слишком слабый</string>
+    <string name="otpcode_title">OTP проверка</string>
+    <string name="otpcode_text">Пожалуйста, проверьте свою электронную почту, чтобы увидеть код подтверждения</string>
+    <string name="otpcode_label">OTP Код</string>
+    <string name="otpcode_again">Отправить снова</string>
 </resources>

@@ -31,29 +31,31 @@ object Validation {
         return answer
     }
 
-    fun Context.validatePassword(password: String): Boolean {
+    fun Context.validatePassword(password: String): Int {
+        var strength = 1
         if (password.length !in 8..20) {
             myToast(getString(R.string.er_password_len))
-            return false // Длинна пароля только в допустимом диапазоне
+            return 0 // Длинна пароля только в допустимом диапазоне
         }
         if (!password.any { it.isLetter() || it.isDigit() }) {
             myToast(getString(R.string.er_password_let_or_digit))
-            return false // В пароле должна быть хотя бы одна буква или цифра
+            return 0 // В пароле должна быть хотя бы одна буква или цифра
         }
         if (password.any { it.isLetter() && (it !in 'a'..'z' && it !in 'A'..'Z') }) {
             myToast(getString(R.string.er_password_lat_only))
-            return false // Разрешена только латиница
+            return 0 // Разрешена только латиница
         }
-        if (!password.any { it.isLetter() && it.isUpperCase() }) {
-            myToast(getString(R.string.er_password_upper_case))
-            return false // В пароле должна быть хотя бы одна заглавная буква
+        if (password.any { it.isLetter() && it.isUpperCase() }) {
+            strength += 1 // Надбавка за заглавную букву
         }
-        if (password.any { !it.isLetter() && !it.isDigit() && it !in "_-!@&:." }) {
-            myToast(getString(R.string.er_password_spec_chars))
-            return false // Только определенные спец символы
+        if (password.any { it in "_-!@&:." }) {
+            strength += 1 // Надбавка за спец. символы
+        }
+        if (strength == 1) {
+            myToast(getString(R.string.er_password_weak))
         }
 
-        return true
+        return strength
     }
 
 }

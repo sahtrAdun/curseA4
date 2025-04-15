@@ -28,6 +28,10 @@ import dot.curse.matule.data.storage.SharedManager
 import dot.curse.matule.ui.items.header.MatuleHeader
 import dot.curse.matule.ui.screens.boarding.OnBoardingViewModel
 import dot.curse.matule.ui.screens.boarding.comp.OnBoardingScreen
+import dot.curse.matule.ui.screens.otpcode.OtpCodeViewModel
+import dot.curse.matule.ui.screens.otpcode.comp.OtpCodeScreen
+import dot.curse.matule.ui.screens.otpemail.OtpEmailViewModel
+import dot.curse.matule.ui.screens.otpemail.comp.OtpEmailScreen
 import dot.curse.matule.ui.screens.signin.SignInViewModel
 import dot.curse.matule.ui.screens.signin.comp.SignInScreen
 import dot.curse.matule.ui.screens.signup.SignUpViewModel
@@ -36,7 +40,9 @@ import dot.curse.matule.ui.screens.splash.SplashViewModel
 import dot.curse.matule.ui.screens.splash.comp.SplashScreen
 import dot.curse.matule.ui.theme.MatuleTheme
 import dot.curse.matule.ui.utils.MainRoute
+import dot.curse.matule.ui.utils.OTPCodeRoute
 import dot.curse.matule.ui.utils.OTPEmailRoute
+import dot.curse.matule.ui.utils.OTPNewPasswordRoute
 import dot.curse.matule.ui.utils.OnBoardingRoute
 import dot.curse.matule.ui.utils.Routes
 import dot.curse.matule.ui.utils.SignInRoute
@@ -116,7 +122,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable<SignUpRoute> {
-                            val viewModel = hiltViewModel< SignUpViewModel>()
+                            val viewModel = hiltViewModel<SignUpViewModel>()
                             background = MaterialTheme.colorScheme.surface
                             loading = false
 
@@ -127,11 +133,37 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable<OTPEmailRoute> {
-
+                            val viewModel = hiltViewModel<OtpEmailViewModel>()
                             background = MaterialTheme.colorScheme.surface
                             loading = false
 
-                            // TODO
+                            OtpEmailScreen(
+                                viewModel = viewModel,
+                                navController = navController
+                            )
+                        }
+
+                        composable<OTPCodeRoute> { stack ->
+                            val viewModel = hiltViewModel<OtpCodeViewModel>()
+                            background = MaterialTheme.colorScheme.surface
+                            loading = false
+
+                            val email = stack.arguments?.getString("email")?: ""
+                            println("ROUTES EMAIL: $email")
+                            viewModel.updateEmail(email)
+
+                            OtpCodeScreen(
+                                viewModel = viewModel,
+                                navController = navController
+                            )
+                        }
+
+                        composable<OTPNewPasswordRoute> {
+                            //val viewModel = hiltViewModel<OtpEmailViewModel>()
+                            background = MaterialTheme.colorScheme.surface
+                            loading = false
+
+
                         }
 
                         composable<MainRoute> {

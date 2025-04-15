@@ -38,4 +38,16 @@
     <string name="er_signup_email">User with this Email is already exists</string>
     <string name="success_signup">Good! Now login with this data</string>
     <string name="er_signup_confirm">Confirm our privacy policy</string>
+    <string name="er_signin_email">User with such email/password does not exist</string>
+    <string name="er_otpemail_exist">User with such email does not exist</string>
+    <string name="otpemail_title">Forgot Password</string>
+    <string name="otpemail_text">Enter your Email account to reset your password</string>
+    <string name="b_otpemail">Send</string>
+    <string name="otpemail_popup_title">Check your email</string>
+    <string name="otpemail_popup_text">We have send password recovery code in your email</string>
+    <string name="er_password_weak">Password is too weak</string>
+    <string name="otpcode_title">OTP Verification</string>
+    <string name="otpcode_text">Please check your email to see the verification code</string>
+    <string name="otpcode_label">OTP Code</string>
+    <string name="otpcode_again">Send again</string>
 </resources>

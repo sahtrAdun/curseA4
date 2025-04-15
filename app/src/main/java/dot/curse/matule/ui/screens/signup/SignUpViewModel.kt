@@ -70,7 +70,7 @@ class SignUpViewModel @Inject constructor(
 
             val nameValid = context.validateName(_state.value.name)
             val emailValid = context.validateEmail(_state.value.email)
-            val passwordValid = context.validatePassword(_state.value.password)
+            val passwordValid = context.validatePassword(_state.value.password) > 1
 
             _state.update {
                 it.copy(
@@ -83,6 +83,7 @@ class SignUpViewModel @Inject constructor(
             if (nameValid && emailValid && passwordValid) {
                 val notExists = checkEmail(_state.value.email)
                 if (!notExists) {
+                    _state.update { it.copy(emailError = _state.value.email,) }
                     context.myToast(context.getString(R.string.er_signup_email))
                 } else {
                     api.addUser(UserPost(

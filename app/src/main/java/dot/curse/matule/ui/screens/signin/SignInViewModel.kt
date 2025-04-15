@@ -69,27 +69,18 @@ class SignInViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { it.copy(loading = true) }
 
-            val emailValid = context.validateEmail(_state.value.email)
-            val passwordValid = context.validatePassword(_state.value.password)
-
-            _state.update {
-                it.copy(
-                    emailError = if (emailValid) null else _state.value.email,
-                    passwordError = if (passwordValid) null else _state.value.password
-                )
-            }
-
-            if (emailValid && passwordValid) {
-                val response = checkUserExists(_state.value.email, _state.value.password)
-                if (response.notDefault()) {
-                    shared.setLocalUserId(response.id)
-                    shared.setLocalCurrentUser(response)
-                    navigate(MainRoute) {
-                        popUpTo(SignInRoute) { inclusive = true }
-                    }
-                } else {
-                    context.myToast("Error checkUserExists()")
+            val response = checkUserExists(_state.value.email, _state.value.password)
+            if (response.notDefault()) {
+                shared.setLocalUserId(response.id)
+                shared.setLocalCurrentUser(response)
+                navigate(MainRoute) {
+                    popUpTo(SignInRoute) { inclusive = true }
                 }
+            } else {
+                _state.update {
+                    it.copy(emailError = _state.value.email, passwordError = _state.value.password)
+                }
+                context.myToast(context.getString(R.string.er_signin_email))
             }
 
             _state.update { it.copy(loading = false) }
