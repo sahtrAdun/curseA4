@@ -1,7 +1,6 @@
 package dot.curse.matule.ui.screens.signin
 
 import android.content.Context
-import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
@@ -23,8 +22,6 @@ import dot.curse.matule.ui.utils.MainRoute
 import dot.curse.matule.ui.utils.OTPEmailRoute
 import dot.curse.matule.ui.utils.SignInRoute
 import dot.curse.matule.ui.utils.SignUpRoute
-import dot.curse.matule.ui.utils.Validation.validateEmail
-import dot.curse.matule.ui.utils.Validation.validatePassword
 
 @HiltViewModel
 class SignInViewModel @Inject constructor(

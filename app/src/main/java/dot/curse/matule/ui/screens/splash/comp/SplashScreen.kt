@@ -2,7 +2,6 @@ package dot.curse.matule.ui.screens.splash.comp
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import dot.curse.matule.ui.screens.splash.SplashViewModel
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle

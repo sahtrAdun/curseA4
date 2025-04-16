@@ -18,7 +18,6 @@ import javax.inject.Inject
 import dot.curse.matule.R
 import dot.curse.matule.ui.utils.OTPCodeRoute
 import dot.curse.matule.ui.utils.OTPEmailRoute
-import dot.curse.matule.ui.utils.SignInRoute
 
 @HiltViewModel
 class OtpEmailViewModel @Inject constructor(
@@ -39,6 +38,11 @@ class OtpEmailViewModel @Inject constructor(
         return response.isSuccess
     }
 
+    private suspend fun sendOtp(email: String): Boolean {
+        val response = api.sendOtp(email)
+        return response.isSuccess
+    }
+
     fun NavController.onButtonClick() {
         viewModelScope.launch {
             _state.update { it.copy(loading = true) }
@@ -46,9 +50,15 @@ class OtpEmailViewModel @Inject constructor(
             if (emailValid) {
                 val exists = checkEmail(_state.value.email)
                 if (exists) {
-                    navigate(OTPCodeRoute(email = _state.value.email)) {
-                        popUpTo(OTPEmailRoute) { inclusive = true }
-                    } // Переходит к следующему экрану удаляя себя из стека
+                    val response = sendOtp(_state.value.email)
+                    if (response) {
+                        context.myToast(context.getString(R.string.otpemail_popup_text))
+                        navigate(OTPCodeRoute(email = _state.value.email)) {
+                            popUpTo(OTPEmailRoute) { inclusive = true }
+                        } // Переходит к следующему экрану удаляя себя из стека
+                    } else {
+                        context.myToast("Error sending otp")
+                    }
                 } else {
                     _state.update { it.copy(emailError = _state.value.email) }
                     context.myToast(context.getString(R.string.er_otpemail_exist))

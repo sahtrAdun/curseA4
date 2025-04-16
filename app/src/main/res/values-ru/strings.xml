@@ -49,4 +49,13 @@
     <string name="otpcode_text">Пожалуйста, проверьте свою электронную почту, чтобы увидеть код подтверждения</string>
     <string name="otpcode_label">OTP Код</string>
     <string name="otpcode_again">Отправить снова</string>
+    <string name="er_password_eq">Пароли должны быть одинаковыми</string>
+    <string name="otpnew_title">Новый пароль</string>
+    <string name="otpnew_text">Введите новый пароль и повторите его. Он должен содержать не менее 8 символов, включать заглавные и строчные Латинские буквы, цифры и специальные символы.</string>
+    <string name="otp_new_label_password">Пароль</string>
+    <string name="otp_new_label_password_confirm">Повторите пароль</string>
+    <string name="otpnew_str_weak">Слабый пароль</string>
+    <string name="otpnew_str_normal">Нормальный пароль</string>
+    <string name="otpnew_str_strong">Надежный пароль</string>
+    <string name="b_otpnew">Сохранить</string>
 </resources>

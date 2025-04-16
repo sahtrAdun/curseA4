@@ -12,7 +12,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,22 +45,27 @@ fun OtpCodeInputField(
     onNumberChange: (Int?) -> Unit,
     onKeyboardBack: () -> Unit
 ) {
-    var text by remember {
+    var text by remember(number) {
         mutableStateOf(
             TextFieldValue(
                 text = number?.toString().orEmpty(),
                 selection = TextRange(
                     index = if(number != null) 1 else 0
-
                 )
             )
         )
     }
     var isFocused by remember { mutableStateOf(false) }
+    val textStyle = TextStyle(
+        textAlign = TextAlign.Center,
+        fontSize = 14.sp,
+        fontWeight = FontWeight.SemiBold,
+        color = if (isFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
+    )
     Box(modifier = modifier
         .size(width = 45.dp, height = 100.dp)
-        .then(if(error) Modifier.border(
-            color = MaterialTheme.colorScheme.error,
+        .then(if (error || isFocused) Modifier.border(
+            color = if (error) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
             shape = RoundedCornerShape(12.dp),
             width = 1.dp
         ) else Modifier)
@@ -81,12 +85,7 @@ fun OtpCodeInputField(
             },
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
             singleLine = true,
-            textStyle = TextStyle(
-                textAlign = TextAlign.Center,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onBackground
-            ),
+            textStyle = textStyle,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.NumberPassword
             ),
@@ -108,12 +107,7 @@ fun OtpCodeInputField(
                 if (number == null) {
                     Text(
                         text = "-",
-                        style = TextStyle(
-                            textAlign = TextAlign.Center,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onBackground
-                        ),
+                        style = textStyle,
                         modifier = Modifier
                             .fillMaxSize()
                             .wrapContentSize()

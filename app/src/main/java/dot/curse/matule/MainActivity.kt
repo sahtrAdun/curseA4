@@ -32,6 +32,7 @@ import dot.curse.matule.ui.screens.otpcode.OtpCodeViewModel
 import dot.curse.matule.ui.screens.otpcode.comp.OtpCodeScreen
 import dot.curse.matule.ui.screens.otpemail.OtpEmailViewModel
 import dot.curse.matule.ui.screens.otpemail.comp.OtpEmailScreen
+import dot.curse.matule.ui.screens.otpnewpassword.OtpNewPasswordViewModel
 import dot.curse.matule.ui.screens.signin.SignInViewModel
 import dot.curse.matule.ui.screens.signin.comp.SignInScreen
 import dot.curse.matule.ui.screens.signup.SignUpViewModel
@@ -39,6 +40,7 @@ import dot.curse.matule.ui.screens.signup.comp.SignUpScreen
 import dot.curse.matule.ui.screens.splash.SplashViewModel
 import dot.curse.matule.ui.screens.splash.comp.SplashScreen
 import dot.curse.matule.ui.theme.MatuleTheme
+import dot.curse.matule.ui.utils.AppLanguage.initializeLanguage
 import dot.curse.matule.ui.utils.MainRoute
 import dot.curse.matule.ui.utils.OTPCodeRoute
 import dot.curse.matule.ui.utils.OTPEmailRoute
@@ -70,6 +72,7 @@ class MainActivity : ComponentActivity() {
             var darkTheme by remember { mutableStateOf(
                 SharedManager(this).getDarkTheme()
             ) }
+            this@MainActivity.initializeLanguage()
 
             MatuleTheme(darkTheme = darkTheme) {
                 Scaffold(modifier = Modifier
@@ -149,7 +152,6 @@ class MainActivity : ComponentActivity() {
                             loading = false
 
                             val email = stack.arguments?.getString("email")?: ""
-                            println("ROUTES EMAIL: $email")
                             viewModel.updateEmail(email)
 
                             OtpCodeScreen(
@@ -158,10 +160,13 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        composable<OTPNewPasswordRoute> {
-                            //val viewModel = hiltViewModel<OtpEmailViewModel>()
+                        composable<OTPNewPasswordRoute> { stack ->
+                            val viewModel = hiltViewModel<OtpNewPasswordViewModel>()
                             background = MaterialTheme.colorScheme.surface
                             loading = false
+
+                            val email = stack.arguments?.getString("email")?: ""
+                            viewModel.updateEmail(email)
 
 
                         }

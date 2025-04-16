@@ -1,5 +1,8 @@
 package dot.curse.matule.data.repository
 
+import dot.curse.matule.domain.model.CheckOtpResult
+import dot.curse.matule.domain.model.SendOtpRequest
+import dot.curse.matule.domain.model.user.User
 import dot.curse.matule.domain.model.user.UserDot
 import dot.curse.matule.domain.model.user.UserPost
 import dot.curse.matule.domain.repository.ApiRepository
@@ -8,6 +11,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.accept
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import io.ktor.client.request.patch
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
@@ -50,25 +54,6 @@ class ApiRepositoryImpl @Inject constructor(
         }
     }
 
-    /*override suspend fun addUser(user: UserPost): Result<UserDot> {
-        return try {
-            val response = client.post("/$COLLECTION_USERS") {
-                contentType(ContentType.Application.Json)
-                accept(ContentType.Application.Json)
-                setBody(user)
-            }
-            if (response.status == HttpStatusCode.OK) {
-                val body = response.body<UserDot>()
-                Result.success(body)
-            } else {
-                Result.failure(Exception("HTTP error: ${response.status}"))
-            }
-        } catch (e: Exception) {
-            println("Exception addUser($user):\n${e.message}")
-            Result.failure(e)
-        }
-    }*/
-
     override suspend fun addUser(user: UserPost): Result<Boolean> {
         return try {
             val response = client.post("/$COLLECTION_USERS") {
@@ -87,15 +72,30 @@ class ApiRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateUser(user: UserPost): Result<UserDot> {
+    override suspend fun updateUser(user: User): Result<UserDot> {
         return try {
-            client.put("/$COLLECTION_USERS") {
+            client.patch("/$COLLECTION_USERS") {
+                parameter("id", "eq.${user.id}")
                 setBody(user)
             }.body<UserDot>().let { body ->
                 Result.success(body)
             }
         } catch (e: Exception) {
             println("Exception updateUser($user):\n${e.message}")
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun updateUserByEmail(user: User): Result<UserDot> {
+        return try {
+            client.patch("/$COLLECTION_USERS") {
+                parameter("email", "eq.${user.email}")
+                setBody(user)
+            }.body<UserDot>().let { body ->
+                Result.success(body)
+            }
+        } catch (e: Exception) {
+            println("Exception updateUserByEmail($user):\n${e.message}")
             Result.failure(e)
         }
     }
@@ -131,6 +131,35 @@ class ApiRepositoryImpl @Inject constructor(
             }
         } catch (e: Exception) {
             println("Exception checkUserExists($email, $password):\n${e.message}")
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun sendOtp(email: String): Result<Boolean> {
+        return try {
+            val response = client.post("/auth/v1/otp") {
+                contentType(ContentType.Application.Json)
+                setBody(SendOtpRequest(email = email))
+            }
+            Result.success(response.status == HttpStatusCode.OK)
+        } catch (e: Exception) {
+            println("Error sending OTP: ${e.message}")
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun checkOtp(email: String, otp: String): Result<Boolean> {
+        return try {
+            println("Validate OTP with $email and $otp")
+            val response = client.post("/auth/v1/verify") {
+                setBody(CheckOtpResult(
+                    email = email,
+                    token = otp
+                ))
+            }
+            Result.success(response.status == HttpStatusCode.OK)
+        } catch (e: Exception) {
+            println("Error sending OTP: ${e.message}")
             Result.failure(e)
         }
     }

@@ -18,9 +18,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import dot.curse.matule.R
-import dot.curse.matule.domain.model.user.User
 import dot.curse.matule.domain.model.user.UserPost
-import dot.curse.matule.ui.utils.SignInRoute
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
@@ -83,7 +81,7 @@ class SignUpViewModel @Inject constructor(
             if (nameValid && emailValid && passwordValid) {
                 val notExists = checkEmail(_state.value.email)
                 if (!notExists) {
-                    _state.update { it.copy(emailError = _state.value.email,) }
+                    _state.update { it.copy(emailError = _state.value.email) }
                     context.myToast(context.getString(R.string.er_signup_email))
                 } else {
                     api.addUser(UserPost(

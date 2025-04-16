@@ -18,7 +18,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,6 +58,19 @@ fun OtpCodeScreen(
         }
     }
     LaunchedEffect(Unit) { timer.start() }
+    LaunchedEffect(state.focusedIndex) {
+        state.focusedIndex?.let { index ->
+            focusRequesters.getOrNull(index)?.requestFocus()
+        }
+    }
+    LaunchedEffect(state.code, keyboard) {
+        val allNumberEntered = state.code.none { it == null }
+        if (allNumberEntered) {
+            focusRequesters.forEach { it.freeFocus() }
+            focusManager.clearFocus()
+            keyboard?.hide()
+        }
+    }
 
     Column(modifier = modifier
         .fillMaxSize()
@@ -90,7 +102,8 @@ fun OtpCodeScreen(
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(horizontal = 25.dp)
                 )
-                Column(
+                Column(modifier = Modifier
+                    .padding(top = 15.dp),
                     verticalArrangement = Arrangement.spacedBy(20.dp),
                 ) {
                     Text(
@@ -104,24 +117,18 @@ fun OtpCodeScreen(
                     ) {
                         state.code.forEachIndexed { index, number ->
                             OtpCodeInputField(
-                                modifier = Modifier.weight(1f),
+                                modifier = Modifier,
                                 number = number,
                                 error = state.isValid == false,
                                 focusRequester = focusRequesters[index],
                                 onFocusChange = { isFocused ->
-                                    if (isFocused) viewModel.setFocusedIndex(index)
+                                    if (isFocused) viewModel.onChangeFieldFocused(index)
                                 },
                                 onNumberChange = { newNumber ->
-                                    viewModel.updateCode(index, newNumber)
-                                    if (newNumber != null && index < 5) {
-                                        focusRequesters[index + 1].requestFocus()
-                                    }
+                                    viewModel.apply { navController.onEnterNumber(newNumber, index) }
                                 },
                                 onKeyboardBack = {
-                                    viewModel.handleBackspace(index)
-                                    if (state.focusedIndex != null && state.focusedIndex!! > 0) {
-                                        focusRequesters[state.focusedIndex!!].requestFocus()
-                                    }
+                                    viewModel.onKeyboardBack()
                                 }
                             )
                         }
@@ -133,7 +140,9 @@ fun OtpCodeScreen(
                             text = stringResource(R.string.otpcode_again),
                             color = MaterialTheme.colorScheme.outlineVariant,
                             style = MaterialTheme.typography.bodyMedium,
-                            textAlign = TextAlign.Start
+                            textAlign = TextAlign.Start,
+                            modifier = Modifier
+                                .clickable(null, null) { viewModel.sendOtpAgain() }
                         )
                         Spacer(Modifier.weight(1f))
                         Text(

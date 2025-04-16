@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
@@ -57,8 +58,9 @@ fun MatuleTextField(
 ) {
     var isVisible by remember { mutableStateOf(false) }
     val isPassword = visual == PasswordVisualTransformation()
+    var isFocused by remember { mutableStateOf(false) }
     val textStyle = TextStyle(
-        color = if (!error) tint else MaterialTheme.colorScheme.error,
+        color = if (error) MaterialTheme.colorScheme.error else if (isFocused) MaterialTheme.colorScheme.primary else tint,
         fontSize = 15.sp
     )
 
@@ -68,9 +70,9 @@ fun MatuleTextField(
             color = background,
             shape = RoundedCornerShape(12.dp)
         )
-        .then(if (error) Modifier.border(
+        .then(if (error || isFocused) Modifier.border(
             width = 1.dp,
-            color = MaterialTheme.colorScheme.error,
+            color = if (error) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
             shape = RoundedCornerShape(12.dp)
         ) else Modifier),
         verticalAlignment = Alignment.CenterVertically
@@ -79,7 +81,8 @@ fun MatuleTextField(
         BasicTextField(
             modifier = Modifier
                 .weight(1f)
-                .fillMaxHeight(),
+                .fillMaxHeight()
+                .onFocusChanged { isFocused = it.isFocused },
             value = value,
             onValueChange = onValueChange,
             singleLine = singleLine,

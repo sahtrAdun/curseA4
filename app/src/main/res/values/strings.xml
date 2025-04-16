@@ -50,4 +50,13 @@
     <string name="otpcode_text">Please check your email to see the verification code</string>
     <string name="otpcode_label">OTP Code</string>
     <string name="otpcode_again">Send again</string>
+    <string name="er_password_eq">Passwords must be equals</string>
+    <string name="otpnew_title">New Password</string>
+    <string name="otpnew_text">Enter a new password and repeat it. It must be at least 8 characters long and include uppercase and lowercase Latin letters, numbers and special characters.</string>
+    <string name="otp_new_label_password">Password</string>
+    <string name="otp_new_label_password_confirm">Confirm password</string>
+    <string name="otpnew_str_weak">Weak password</string>
+    <string name="otpnew_str_normal">Normal password</string>
+    <string name="otpnew_str_strong">Strong password</string>
+    <string name="b_otpnew">Save</string>
 </resources>
