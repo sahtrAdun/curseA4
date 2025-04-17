@@ -5,6 +5,7 @@ import dot.curse.matule.domain.model.SendOtpRequest
 import dot.curse.matule.domain.model.user.User
 import dot.curse.matule.domain.model.user.UserDot
 import dot.curse.matule.domain.model.user.UserPost
+import dot.curse.matule.domain.model.user.notDefault
 import dot.curse.matule.domain.repository.ApiRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -15,6 +16,7 @@ import io.ktor.client.request.patch
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
@@ -86,13 +88,16 @@ class ApiRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateUserByEmail(user: User): Result<UserDot> {
+    override suspend fun updateUserByEmail(user: UserPost): Result<Boolean> {
         return try {
-            client.patch("/$COLLECTION_USERS") {
+            val response = client.patch("/$COLLECTION_USERS") {
                 parameter("email", "eq.${user.email}")
                 setBody(user)
-            }.body<UserDot>().let { body ->
-                Result.success(body)
+            }
+            if (response.status == HttpStatusCode.NoContent) {
+                Result.success(true)
+            } else {
+                Result.failure(Exception("HTTP error: ${response.status}"))
             }
         } catch (e: Exception) {
             println("Exception updateUserByEmail($user):\n${e.message}")
@@ -126,8 +131,8 @@ class ApiRepositoryImpl @Inject constructor(
             client.get("/$COLLECTION_USERS") {
                 parameter("email", "eq.$email")
                 parameter("password", "eq.$password")
-            }.body<UserDot>().let { body ->
-                Result.success(body)
+            }.body<List<UserDot>>().let { body ->
+                Result.success(body.first())
             }
         } catch (e: Exception) {
             println("Exception checkUserExists($email, $password):\n${e.message}")
@@ -139,7 +144,10 @@ class ApiRepositoryImpl @Inject constructor(
         return try {
             val response = client.post("/auth/v1/otp") {
                 contentType(ContentType.Application.Json)
-                setBody(SendOtpRequest(email = email))
+                setBody(SendOtpRequest(
+                    email = email,
+                    type = "email"
+                ))
             }
             Result.success(response.status == HttpStatusCode.OK)
         } catch (e: Exception) {
@@ -150,14 +158,24 @@ class ApiRepositoryImpl @Inject constructor(
 
     override suspend fun checkOtp(email: String, otp: String): Result<Boolean> {
         return try {
-            println("Validate OTP with $email and $otp")
             val response = client.post("/auth/v1/verify") {
                 setBody(CheckOtpResult(
                     email = email,
-                    token = otp
+                    token = otp,
+                    type = "email"
                 ))
             }
-            Result.success(response.status == HttpStatusCode.OK)
+            if (response.status == HttpStatusCode.OK) {
+                val responseBody = response.bodyAsText()
+                return if (responseBody.contains("403") || responseBody.contains("error", ignoreCase = true)) {
+                    Result.success(false)
+                } else {
+                    Result.success(true)
+                }
+            } else {
+                println("Error: ${response.status}")
+                return Result.success(false)
+            }
         } catch (e: Exception) {
             println("Error sending OTP: ${e.message}")
             Result.failure(e)

@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -26,11 +27,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import dot.curse.matule.R
+import dot.curse.matule.ui.items.MatuleButton
 import dot.curse.matule.ui.items.MatuleTextField
 import dot.curse.matule.ui.screens.otpnewpassword.OtpNewPasswordViewModel
 import dot.curse.matule.ui.screens.signin.comp.SignInputRow
@@ -92,12 +95,11 @@ fun OtpNewPasswordScreen(
                     placeholder = "********",
                     type = KeyboardType.Password,
                     visual = PasswordVisualTransformation(),
-                    actionType = ImeAction.Done,
+                    actionType = ImeAction.Next,
                     error = state.password == state.passwordError,
                     enabled = !state.loading,
-                    actions = KeyboardActions(onDone = {
-                        keyboard?.hide()
-                        focusManager.clearFocus()
+                    actions = KeyboardActions(onNext = {
+                        passwordConfirmFocusRequester.requestFocus()
                     })
                 )
             }
@@ -123,7 +125,30 @@ fun OtpNewPasswordScreen(
                     })
                 )
             }
-
+            Text(
+                text = when (state.passwordStrength) {
+                    3 -> stringResource(R.string.otpnew_str_strong)
+                    2 -> stringResource(R.string.otpnew_str_normal)
+                    else -> stringResource(R.string.otpnew_str_weak)
+                },
+                style = MaterialTheme.typography.bodySmall,
+                color = when (state.passwordStrength) {
+                    3 -> Color.Green
+                    2 -> MaterialTheme.colorScheme.onBackground
+                    else -> Color.Red
+                },
+                textAlign = TextAlign.Start,
+                textDecoration = TextDecoration.Underline,
+                modifier = Adaptive()
+                    .adaptiveElementWidthMedium()
+                    .padding(vertical = 20.dp)
+            )
+            MatuleButton(
+                modifier = Adaptive().adaptiveElementWidthMedium().padding(top = 25.dp),
+                text = stringResource(R.string.b_otpnew),
+                active = !state.loading,
+                action = { viewModel.apply { navController.onButtonClick() } }
+            )
         }
     }
 }

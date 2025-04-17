@@ -51,6 +51,7 @@ fun MatuleHeader(
     }
     var label by remember { mutableStateOf("null") }
     label = when(currentRoute) {
+        Routes.MainRoute.patch -> context.getString(R.string.title_main)
         else -> ""
     }
     var placeHolderColor by remember { mutableStateOf(Color.White) }
@@ -75,7 +76,7 @@ fun MatuleHeader(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 when(currentRoute) {
-                    Routes.MainRoute.patch -> {
+                    Routes.MainRoute.patch -> { // TODO Добавить <ProfileRoute> и <NotificationRoute>
                         Icon(
                             imageVector = ImageVector.vectorResource(
                                 if (SharedManager(context).getDarkTheme() == true) R.drawable.hamburger_light else R.drawable.hamburger
@@ -84,7 +85,9 @@ fun MatuleHeader(
                             tint = Color.Unspecified,
                             modifier = Modifier
                                 .size(30.dp)
-                                .clickable(null, null) {}
+                                .clickable(null, null) {
+                                    // TODO Открытие меню <MenuRoute>
+                                }
                         )
                     }
                     Routes.SplashScreenRoute.patch,

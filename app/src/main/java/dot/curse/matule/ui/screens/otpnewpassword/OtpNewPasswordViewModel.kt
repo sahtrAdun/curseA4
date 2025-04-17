@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import dot.curse.matule.R
 import dot.curse.matule.domain.model.user.User
+import dot.curse.matule.domain.model.user.UserPost
 import dot.curse.matule.domain.repository.UserRepository
 
 @HiltViewModel
@@ -26,8 +27,8 @@ class OtpNewPasswordViewModel @Inject constructor(
     private val _state = MutableStateFlow(OtpNewPasswordState())
     val state = _state.asStateFlow()
 
-    fun checkPasswordStrength(): Int {
-        return context.validatePasswordWithoutNotice(_state.value.password)
+    fun checkPasswordStrength(password: String): Int {
+        return context.validatePasswordWithoutNotice(password)
     }
 
     fun updateEmail(value: String) {
@@ -41,7 +42,7 @@ class OtpNewPasswordViewModel @Inject constructor(
             _state.update { it.copy(
                 password = value,
                 passwordsEq = it.passwordConfirm == value,
-                passwordStrength = checkPasswordStrength()
+                passwordStrength = checkPasswordStrength(value)
             ) }
         }
     }
@@ -57,7 +58,7 @@ class OtpNewPasswordViewModel @Inject constructor(
 
     fun NavController.onButtonClick() {
         viewModelScope.launch {
-            if (checkPasswordStrength() <= 1) {
+            if (checkPasswordStrength(_state.value.password) <= 1) {
                 context.myToast(context.getString(R.string.er_password_weak))
                 return@launch
             }
@@ -67,12 +68,11 @@ class OtpNewPasswordViewModel @Inject constructor(
             }
             _state.update { it.copy(loading = true) }
 
-            val response = api.updateUserByEmail(User(
+            val response = api.updateUserByEmail(UserPost(
                 email = _state.value.email,
                 password = _state.value.password
             ))
             if (response.isSuccess) {
-                context.myToast("Ok")
                 popBackStack()
             } else {
                 _state.update {

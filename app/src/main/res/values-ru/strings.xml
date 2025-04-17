@@ -58,4 +58,15 @@
     <string name="otpnew_str_normal">Нормальный пароль</string>
     <string name="otpnew_str_strong">Надежный пароль</string>
     <string name="b_otpnew">Сохранить</string>
+    <string name="title_main">Главная</string>
+    <string name="main_search">Поиск</string>
+    <string name="main_label_category">Категории</string>
+    <string name="main_label_popular">Популярное</string>
+    <string name="main_see_all">Все</string>
+    <string name="main_label_sales">Акции</string>
+    <string name="title_favor">Избранное</string>
+    <string name="title_cart">Корзина</string>
+    <string name="title_filter">Фильтры</string>
+    <string name="title_result">Результат</string>
+    <string name="title_detail">Детали</string>
 </resources>

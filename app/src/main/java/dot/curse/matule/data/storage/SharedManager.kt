@@ -25,10 +25,14 @@ class SharedManager(context: Context) {
         sharedPreferences.edit { putBoolean("first_time", value) }
     }
 
-    /*fun getLocalCurrentUser(): User {
-        val shared = sharedPreferences.getString("current_user", null)?: ""
-        return Json.decodeFromString<User>(shared)
-    }*/
+    fun getLocalCurrentUser(): User {
+        val shared = sharedPreferences.getString("current_user", null)
+        return if (shared != null) {
+            Json.decodeFromString<User>(shared)
+        } else {
+            User(id = getLocalUserId())
+        }
+    }
 
     fun setLocalCurrentUser(user: User) {
         Json.encodeToString<User>(user).let {

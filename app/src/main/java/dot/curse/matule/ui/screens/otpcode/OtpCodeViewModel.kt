@@ -39,11 +39,11 @@ class OtpCodeViewModel @Inject constructor(
         }
     }
 
-    suspend fun getOtpValid(): Boolean {
+    suspend fun getOtpValid(otp: String): Boolean {
         return api.checkOtp(
             email = _state.value.email,
-            otp = _state.value.code.joinToString("")
-        ).isSuccess
+            otp = otp
+        ).getOrElse { false }
     }
 
     private fun enterNumber(number: Int?, index: Int, navController: NavController) {
@@ -69,14 +69,11 @@ class OtpCodeViewModel @Inject constructor(
                     }
                 )
             }
-            _state.update {
-                it.copy(
-                    isValid = if(it.code.none { it == null }) {
-                        getOtpValid()
-                    } else null
-                )
-            }
-            if (_state.value.isValid == true) {
+            val valid = if(_state.value.code.none { it == null }) {
+                getOtpValid(_state.value.code.joinToString(""))
+            } else null
+            _state.update { it.copy(isValid = valid) }
+            if (valid == true) {
                 navController.navigate(OTPNewPasswordRoute(email = _state.value.email)) {
                     popUpTo(OTPCodeRoute(email = _state.value.email)) { inclusive = true }
                 } // Переходит к следующему экрану удаляя себя из стека

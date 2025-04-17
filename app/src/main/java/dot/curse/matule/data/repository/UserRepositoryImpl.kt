@@ -37,11 +37,9 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateUserByEmail(user: User): Result<User> {
+    override suspend fun updateUserByEmail(user: UserPost): Result<Boolean> {
         val userDotResult = api.updateUserByEmail(user)
-        return userDotResult.map { userDot ->
-            userDot.toUser()
-        }
+        return userDotResult
     }
 
     override suspend fun getUserByEmail(email: String): Result<User> {

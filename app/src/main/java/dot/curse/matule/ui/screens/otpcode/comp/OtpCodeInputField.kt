@@ -103,15 +103,20 @@ fun OtpCodeInputField(
                     false
                 },
             decorationBox = { inner ->
-                inner()
-                if (number == null) {
-                    Text(
-                        text = "-",
-                        style = textStyle,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .wrapContentSize()
-                    )
+                Box(modifier = Modifier
+                    .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    inner()
+                    if (number == null) {
+                        Text(
+                            text = "-",
+                            style = textStyle,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .wrapContentSize()
+                        )
+                    }
                 }
             }
         )

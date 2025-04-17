@@ -59,4 +59,15 @@
     <string name="otpnew_str_normal">Normal password</string>
     <string name="otpnew_str_strong">Strong password</string>
     <string name="b_otpnew">Save</string>
+    <string name="title_main">Explore</string>
+    <string name="main_search">Looking for shoes</string>
+    <string name="main_label_category">Select Category</string>
+    <string name="main_label_popular">Popular Shoes</string>
+    <string name="main_see_all">See all</string>
+    <string name="main_label_sales">New Arrivals</string>
+    <string name="title_favor">Favourite</string>
+    <string name="title_cart">Cart</string>
+    <string name="title_filter">Filters</string>
+    <string name="title_result">Result</string>
+    <string name="title_detail">Details</string>
 </resources>
