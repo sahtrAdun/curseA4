@@ -47,7 +47,7 @@ fun MainScreen(
         Column(
             modifier = Adaptive()
                 .adaptiveElementWidthMedium(),
-            verticalArrangement = Arrangement.spacedBy(20.dp),
+            verticalArrangement = Arrangement.spacedBy(15.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             DummySearchTextField(

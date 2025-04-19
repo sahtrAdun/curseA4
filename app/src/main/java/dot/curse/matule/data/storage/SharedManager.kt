@@ -26,12 +26,9 @@ class SharedManager(context: Context) {
     }
 
     fun getLocalCurrentUser(): User {
-        val shared = sharedPreferences.getString("current_user", null)
-        return if (shared != null) {
-            Json.decodeFromString<User>(shared)
-        } else {
-            User(id = getLocalUserId())
-        }
+        return sharedPreferences.getString("current_user", null)?.let {
+            Json.decodeFromString<User>(it)
+        }?: User(id = getLocalUserId())
     }
 
     fun setLocalCurrentUser(user: User) {
@@ -54,6 +51,18 @@ class SharedManager(context: Context) {
 
     fun setLanguage(lang: String) {
         sharedPreferences.edit { putString("app_language_code", lang) }
+    }
+
+    fun setLocalSearchHistory(history: List<String>) {
+        sharedPreferences.edit {
+            putString("search_history", Json.encodeToString<List<String>>(history))
+        }
+    }
+
+    fun getLocalSearchHistory(): List<String> {
+        return sharedPreferences.getString("search_history", null)?.let {
+            Json.decodeFromString<List<String>>(it)
+        }?: emptyList<String>()
     }
 
 

@@ -8,6 +8,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -17,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
@@ -26,9 +28,12 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dot.curse.matule.data.storage.SharedManager
 import dot.curse.matule.domain.model.SearchFilter
+import dot.curse.matule.ui.items.footer.MatuleFooter
 import dot.curse.matule.ui.items.header.MatuleHeader
 import dot.curse.matule.ui.screens.boarding.OnBoardingViewModel
 import dot.curse.matule.ui.screens.boarding.comp.OnBoardingScreen
+import dot.curse.matule.ui.screens.favorites.FavoritesScreen
+import dot.curse.matule.ui.screens.favorites.FavoritesViewModel
 import dot.curse.matule.ui.screens.main.MainViewModel
 import dot.curse.matule.ui.screens.main.comp.MainScreen
 import dot.curse.matule.ui.screens.otpcode.OtpCodeViewModel
@@ -37,7 +42,10 @@ import dot.curse.matule.ui.screens.otpemail.OtpEmailViewModel
 import dot.curse.matule.ui.screens.otpemail.comp.OtpEmailScreen
 import dot.curse.matule.ui.screens.otpnewpassword.OtpNewPasswordViewModel
 import dot.curse.matule.ui.screens.otpnewpassword.comp.OtpNewPasswordScreen
+import dot.curse.matule.ui.screens.search.SearchViewModel
+import dot.curse.matule.ui.screens.search.comp.SearchScreen
 import dot.curse.matule.ui.screens.searchresult.SearchResultViewModel
+import dot.curse.matule.ui.screens.searchresult.comp.SearchResultScreen
 import dot.curse.matule.ui.screens.signin.SignInViewModel
 import dot.curse.matule.ui.screens.signin.comp.SignInScreen
 import dot.curse.matule.ui.screens.signup.SignUpViewModel
@@ -46,6 +54,7 @@ import dot.curse.matule.ui.screens.splash.SplashViewModel
 import dot.curse.matule.ui.screens.splash.comp.SplashScreen
 import dot.curse.matule.ui.theme.MatuleTheme
 import dot.curse.matule.ui.utils.AppLanguage.initializeLanguage
+import dot.curse.matule.ui.utils.FavoritesRoute
 import dot.curse.matule.ui.utils.MainRoute
 import dot.curse.matule.ui.utils.OTPCodeRoute
 import dot.curse.matule.ui.utils.OTPEmailRoute
@@ -53,6 +62,7 @@ import dot.curse.matule.ui.utils.OTPNewPasswordRoute
 import dot.curse.matule.ui.utils.OnBoardingRoute
 import dot.curse.matule.ui.utils.Routes
 import dot.curse.matule.ui.utils.SearchResultRoute
+import dot.curse.matule.ui.utils.SearchRoute
 import dot.curse.matule.ui.utils.SignInRoute
 import dot.curse.matule.ui.utils.SignUpRoute
 import dot.curse.matule.ui.utils.SplashScreenRoute
@@ -91,7 +101,12 @@ class MainActivity : ComponentActivity() {
                             navController = navController
                         )
                     },
-                    bottomBar = {}
+                    bottomBar = {
+                        MatuleFooter(
+                            currentRoute = currentRoute?.destination?.route?: Routes.SplashScreenRoute.patch,
+                            navController = navController
+                        )
+                    }
                 ) { pd->
                     NavHost(
                         modifier = Modifier.padding(pd),
@@ -202,8 +217,33 @@ class MainActivity : ComponentActivity() {
                             }?: SearchFilter()
                             viewModel.parseSearchFilter(filter)
 
+                            SearchResultScreen(
+                                viewModel = viewModel,
+                                navController = navController
+                            )
                         }
 
+                        composable<SearchRoute> { stack ->
+                            loading = false
+                            background = MaterialTheme.colorScheme.background
+                            val viewModel = hiltViewModel<SearchViewModel>()
+
+                            SearchScreen(
+                                viewModel = viewModel,
+                                navController = navController
+                            )
+                        }
+
+                        composable<FavoritesRoute> { stack ->
+                            loading = false
+                            background = MaterialTheme.colorScheme.background
+                            val viewModel = hiltViewModel<FavoritesViewModel>()
+
+                            FavoritesScreen(
+                                viewModel = viewModel,
+                                navController = navController
+                            )
+                        }
                     }
                 }
             }

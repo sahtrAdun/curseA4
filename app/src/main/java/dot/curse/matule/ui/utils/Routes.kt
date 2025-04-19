@@ -1,6 +1,5 @@
 package dot.curse.matule.ui.utils
 
-import dot.curse.matule.domain.model.SearchFilter
 import kotlinx.serialization.Serializable
 
 enum class Routes(val patch: String) {
@@ -15,6 +14,7 @@ enum class Routes(val patch: String) {
     SearchResultRoute("dot.curse.matule.ui.utils.SearchResultRoute"),
     SearchRoute("dot.curse.matule.ui.utils.SearchRoute"),
     ShoeDetailRoute("dot.curse.matule.ui.utils.ShoeDetailRoute"),
+    FavoritesRoute("dot.curse.matule.ui.utils.FavoritesRoute")
 }
 
 @Serializable
@@ -43,6 +43,9 @@ data object MainRoute
 
 @Serializable
 data object SearchRoute
+
+@Serializable
+data object FavoritesRoute
 
 @Serializable
 data class SearchResultRoute(val filter: String)

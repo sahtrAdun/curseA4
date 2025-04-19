@@ -1,4 +1,4 @@
-package dot.curse.matule.ui.screens.searchresult
+package dot.curse.matule.ui.screens.favorites
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -24,71 +24,26 @@ import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchResultViewModel @Inject constructor(
+class FavoritesViewModel @Inject constructor(
     private val shared: SharedManager,
     private val userApi: UserRepository,
     private val shoeApi: ShoeRepository,
     @ApplicationContext val context: Context
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(SearchResultState())
-    val state: StateFlow<SearchResultState> = _state.asStateFlow()
+    private val _state = MutableStateFlow(FavoritesState())
+    val state: StateFlow<FavoritesState> = _state.asStateFlow()
 
     init {
         viewModelScope.launch {
             val user = shared.getLocalCurrentUser()
             _state.update { it.copy(currentUser = userApi.getUserById(user.id).getOrElse { user }) }
-            _state.update {
-                it.copy(
-                    list = initList(),
-                    userFav = shoeApi.getUserFavorites(it.currentUser.id).getOrElse { emptyList() },
-                    userCart = shoeApi.getUserCart(it.currentUser.id).getOrElse { emptyList() },
-                    loading = false
-                )
-            }
+            _state.update { it.copy(
+                list = shoeApi.getUserFavorites(it.currentUser.id).getOrElse { emptyList() },
+                userCart = shoeApi.getUserCart(it.currentUser.id).getOrElse { emptyList() },
+                loading = false
+            ) }
         }
-    }
-
-    fun parseSearchFilter(filter: SearchFilter) {
-        _state.update { it.copy(searchFilter = filter) }
-    }
-
-    private suspend fun initList(): List<Shoe> {
-        val filter = _state.value.searchFilter
-        var list: List<Shoe> = shoeApi.getAllShoe().getOrElse { emptyList() }
-
-        filter.shoeTag?.let { tag ->
-            list = list.filter { shoe ->
-                shoe.tag == tag
-            }
-        }
-
-        filter.shoeCategory?.let { category ->
-            list = list.filter { shoe ->
-                shoe.category == category
-            }
-        }
-
-        filter.text?.let { text ->
-            list = list.filter { shoe ->
-                shoe.name.contains(text, true) || shoe.company.contains(text, true)
-            }
-        }
-
-        filter.priceBetween?.let { price ->
-            val (minPrice, maxPrice) = price.entries.first()
-            list = list.filter { shoe ->
-                shoe.price.toInt() in minPrice..maxPrice
-            }
-        }
-
-        filter.colors?.let { colors ->
-            list = list.filter { shoe ->
-                colors.contains(shoe.color.value)
-            }
-        }
-
-        return list
     }
 
     fun addToFavorite(shoe: Shoe) {
@@ -96,7 +51,7 @@ class SearchResultViewModel @Inject constructor(
             val response = shoeApi.addShoeToUserFavorites(_state.value.currentUser.id, shoe.id)
             if (response.getOrElse { false } == true) {
                 _state.update { it.copy(
-                    userFav = it.userFav.plus(shoe)
+                    list = it.list.plus(shoe)
                 ) }
             }
         }
@@ -118,7 +73,7 @@ class SearchResultViewModel @Inject constructor(
             val response = shoeApi.deleteShoeFromUserFavorites(_state.value.currentUser.id, shoe.id)
             if (response.getOrElse { false } == true) {
                 _state.update { it.copy(
-                    userFav = it.userFav.minus(shoe)
+                    list =  it.list.minus(shoe)
                 ) }
             }
         }

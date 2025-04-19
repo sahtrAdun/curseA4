@@ -15,6 +15,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,11 +49,16 @@ fun MatuleHeader(
         Routes.OnBoardingRoute.patch -> false
         else -> true
     }
-    var label by remember { mutableStateOf("null") }
-    label = when(currentRoute) {
-        Routes.MainRoute.patch -> context.getString(R.string.title_main)
-        Routes.SearchResultRoute.patch -> context.getString(R.string.title_result)
-        else -> ""
+    val label by remember(currentRoute) {
+        derivedStateOf {
+            when {
+                currentRoute?.contains(Routes.MainRoute.patch, ignoreCase = true) == true -> context.getString(R.string.title_main)
+                currentRoute?.contains(Routes.SearchResultRoute.patch, ignoreCase = true) == true -> context.getString(R.string.title_result)
+                currentRoute?.contains(Routes.FavoritesRoute.patch, ignoreCase = true) == true -> context.getString(R.string.title_favor)
+                currentRoute?.contains(Routes.SearchRoute.patch, ignoreCase = true) == true -> context.getString(R.string.title_search)
+                else -> ""
+            }
+        }
     }
     var placeHolderColor by remember { mutableStateOf(Color.White) }
     placeHolderColor = when(currentRoute) {

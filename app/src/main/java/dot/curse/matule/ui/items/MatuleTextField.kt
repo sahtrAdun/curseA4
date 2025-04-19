@@ -60,7 +60,7 @@ fun MatuleTextField(
     val isPassword = visual == PasswordVisualTransformation()
     var isFocused by remember { mutableStateOf(false) }
     val textStyle = TextStyle(
-        color = if (error) MaterialTheme.colorScheme.error else if (isFocused) MaterialTheme.colorScheme.primary else tint,
+        color = if (error) MaterialTheme.colorScheme.error else tint,
         fontSize = 15.sp
     )
 

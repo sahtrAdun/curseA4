@@ -7,16 +7,22 @@ import androidx.navigation.NavController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dot.curse.matule.data.storage.SharedManager
+import dot.curse.matule.domain.model.SearchFilter
 import dot.curse.matule.domain.model.shoe.Shoe
 import dot.curse.matule.domain.model.shoe.ShoeCategory
 import dot.curse.matule.domain.model.shoe.ShoeTag
 import dot.curse.matule.domain.repository.ShoeRepository
 import dot.curse.matule.domain.repository.UserRepository
+import dot.curse.matule.ui.screens.searchresult.SearchResultState
+import dot.curse.matule.ui.utils.SearchResultRoute
+import dot.curse.matule.ui.utils.SearchRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,7 +44,6 @@ class MainViewModel @Inject constructor(
                 userFav = shoeApi.getUserFavorites(it.currentUser.id).getOrElse { emptyList() },
                 userCart = shoeApi.getUserCart(it.currentUser.id).getOrElse { emptyList() },
             ) }
-            println("UserFav: ${_state.value.userFav}" + "\nUserCart: ${_state.value.userCart}")
             _state.update { it.copy(
                 popularShoes = shoeApi.getShoesByTag("Popular").getOrElse { emptyList() },
                 newShoes = shoeApi.getShoesByTag("New").getOrElse { emptyList() },
@@ -48,7 +53,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun NavController.onDummySearchFieldClick() {
-        // TODO
+        navigate(SearchRoute)
     }
 
     fun NavController.onFilterClick() {
@@ -62,7 +67,6 @@ class MainViewModel @Inject constructor(
                 _state.update { it.copy(
                     userFav = it.userFav.plus(shoe)
                 ) }
-                println("New UserFav: ${_state.value.userFav}")
             }
         }
     }
@@ -72,9 +76,8 @@ class MainViewModel @Inject constructor(
             val response = shoeApi.addShoeToUserCart(_state.value.currentUser.id, shoe.id)
             if (response.getOrElse { false } == true) {
                 _state.update { it.copy(
-                    userCart = it.userFav.plus(shoe)
+                    userCart = it.userCart.plus(shoe)
                 ) }
-                println("New UserCart: ${_state.value.userCart}")
             }
         }
     }
@@ -86,7 +89,6 @@ class MainViewModel @Inject constructor(
                 _state.update { it.copy(
                     userFav = it.userFav.minus(shoe)
                 ) }
-                println("New UserFav: ${_state.value.userFav}")
             }
         }
     }
@@ -96,9 +98,8 @@ class MainViewModel @Inject constructor(
             val response = shoeApi.deleteShoeFromUserCart(_state.value.currentUser.id, shoe.id)
             if (response.getOrElse { false } == true) {
                 _state.update { it.copy(
-                    userCart = it.userFav.minus(shoe)
+                    userCart = it.userCart.minus(shoe)
                 ) }
-                println("New UserCart: ${_state.value.userCart}")
             }
         }
     }
@@ -108,23 +109,31 @@ class MainViewModel @Inject constructor(
     }
 
     fun NavController.allShoes() {
-        // TODO
+        navigate(SearchResultRoute(filter = Json.encodeToString<SearchFilter>(SearchFilter())))
     }
 
     fun NavController.onTagClick(tag: ShoeTag) {
-        // TODO
+        navigate(SearchResultRoute(filter = Json.encodeToString<SearchFilter>(SearchFilter(
+            shoeTag = tag
+        ))))
     }
 
     fun NavController.onCategoryClick(category: ShoeCategory) {
-        // TODO
+        navigate(SearchResultRoute(filter = Json.encodeToString<SearchFilter>(SearchFilter(
+            shoeCategory = category
+        ))))
     }
 
     fun NavController.allPopularShoes() {
-        // TODO
+        navigate(SearchResultRoute(filter = Json.encodeToString<SearchFilter>(SearchFilter(
+            shoeTag = ShoeTag.POPULAR
+        ))))
     }
 
     fun NavController.allNewShoes() {
-        // TODO
+        navigate(SearchResultRoute(filter = Json.encodeToString<SearchFilter>(SearchFilter(
+            shoeTag = ShoeTag.NEW
+        ))))
     }
 
 }

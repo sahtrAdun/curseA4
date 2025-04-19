@@ -77,4 +77,5 @@
     <string name="date_yesterday">Yesterday at</string>
     <string name="date_seconds">seconds ago</string>
     <string name="main_row_item_all">All</string>
+    <string name="title_search">Search</string>
 </resources>

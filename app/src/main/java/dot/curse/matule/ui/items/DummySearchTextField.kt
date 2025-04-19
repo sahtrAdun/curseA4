@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun DummySearchTextField(
     modifier: Modifier = Modifier,
+    label: String = stringResource(R.string.main_search),
     withFilterButton: Boolean = true,
     onDummyClick: () -> Unit,
     onFilterClick: () -> Unit
@@ -60,7 +61,7 @@ fun DummySearchTextField(
                     modifier = Modifier.size(18.dp)
                 )
                 Text(
-                    text = stringResource(R.string.main_search),
+                    text = label,
                     style = MaterialTheme.typography.bodySmall,
                     color = tint
                 )
