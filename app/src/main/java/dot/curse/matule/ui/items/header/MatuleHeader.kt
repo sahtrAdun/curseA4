@@ -33,7 +33,6 @@ import dot.curse.matule.ui.utils.Routes
 import dot.curse.matule.R
 import dot.curse.matule.data.storage.SharedManager
 import dot.curse.matule.ui.utils.OnBoardingRoute
-import dot.curse.matule.ui.utils.SignInRoute
 
 @Composable
 fun MatuleHeader(
@@ -52,6 +51,7 @@ fun MatuleHeader(
     var label by remember { mutableStateOf("null") }
     label = when(currentRoute) {
         Routes.MainRoute.patch -> context.getString(R.string.title_main)
+        Routes.SearchResultRoute.patch -> context.getString(R.string.title_result)
         else -> ""
     }
     var placeHolderColor by remember { mutableStateOf(Color.White) }

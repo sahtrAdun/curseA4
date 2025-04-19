@@ -64,10 +64,17 @@
     <string name="main_label_category">Select Category</string>
     <string name="main_label_popular">Popular Shoes</string>
     <string name="main_see_all">See all</string>
-    <string name="main_label_sales">New Arrivals</string>
+    <string name="main_label_new">New</string>
     <string name="title_favor">Favourite</string>
     <string name="title_cart">Cart</string>
     <string name="title_filter">Filters</string>
     <string name="title_result">Result</string>
     <string name="title_detail">Details</string>
+    <string name="date_in">in</string>
+    <string name="date_minutes">minutes ago</string>
+    <string name="date_hours">hours ago</string>
+    <string name="date_today">Today at</string>
+    <string name="date_yesterday">Yesterday at</string>
+    <string name="date_seconds">seconds ago</string>
+    <string name="main_row_item_all">All</string>
 </resources>

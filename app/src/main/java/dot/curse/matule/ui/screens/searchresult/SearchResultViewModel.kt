@@ -1,4 +1,4 @@
-package dot.curse.matule.ui.screens.main
+package dot.curse.matule.ui.screens.searchresult
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -7,6 +7,7 @@ import androidx.navigation.NavController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dot.curse.matule.data.storage.SharedManager
+import dot.curse.matule.domain.model.SearchFilter
 import dot.curse.matule.domain.model.shoe.Shoe
 import dot.curse.matule.domain.model.shoe.ShoeCategory
 import dot.curse.matule.domain.model.shoe.ShoeTag
@@ -20,39 +21,71 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
+class SearchResultViewModel @Inject constructor(
     private val shared: SharedManager,
     private val userApi: UserRepository,
     private val shoeApi: ShoeRepository,
     @ApplicationContext val context: Context
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(MainState())
-    val state: StateFlow<MainState> = _state.asStateFlow()
+    private val _state = MutableStateFlow(SearchResultState())
+    val state: StateFlow<SearchResultState> = _state.asStateFlow()
 
     init {
         viewModelScope.launch {
             val user = shared.getLocalCurrentUser()
             _state.update { it.copy(currentUser = userApi.getUserById(user.id).getOrElse { user }) }
-            _state.update { it.copy(
-                userFav = shoeApi.getUserFavorites(it.currentUser.id).getOrElse { emptyList() },
-                userCart = shoeApi.getUserCart(it.currentUser.id).getOrElse { emptyList() },
-            ) }
-            println("UserFav: ${_state.value.userFav}" + "\nUserCart: ${_state.value.userCart}")
-            _state.update { it.copy(
-                popularShoes = shoeApi.getShoesByTag("Popular").getOrElse { emptyList() },
-                newShoes = shoeApi.getShoesByTag("New").getOrElse { emptyList() },
-                loading = false
-            ) }
+            _state.update {
+                it.copy(
+                    list = initList(),
+                    userFav = shoeApi.getUserFavorites(it.currentUser.id).getOrElse { emptyList() },
+                    userCart = shoeApi.getUserCart(it.currentUser.id).getOrElse { emptyList() },
+                    loading = false
+                )
+            }
         }
     }
 
-    fun NavController.onDummySearchFieldClick() {
-        // TODO
+    fun parseSearchFilter(filter: SearchFilter) {
+        _state.update { it.copy(searchFilter = filter) }
     }
 
-    fun NavController.onFilterClick() {
-        // TODO
+    private suspend fun initList(): List<Shoe> {
+        val filter = _state.value.searchFilter
+        var list: List<Shoe> = shoeApi.getAllShoe().getOrElse { emptyList() }
+
+        filter.shoeTag?.let { tag ->
+            list = list.filter { shoe ->
+                shoe.tag == tag
+            }
+        }
+
+        filter.shoeCategory?.let { category ->
+            list = list.filter { shoe ->
+                shoe.category == category
+            }
+        }
+
+        filter.text?.let { text ->
+            list = list.filter { shoe ->
+                shoe.name.contains(text, true) || shoe.company.contains(text, true)
+            }
+        }
+
+        filter.priceBetween?.let { price ->
+            val (minPrice, maxPrice) = price.entries.first()
+            list = list.filter { shoe ->
+                shoe.price.toInt() in minPrice..maxPrice
+            }
+        }
+
+        filter.colors?.let { colors ->
+            list = list.filter { shoe ->
+                colors.contains(shoe.color.value)
+            }
+        }
+
+        return list
     }
 
     fun addToFavorite(shoe: Shoe) {
@@ -62,7 +95,6 @@ class MainViewModel @Inject constructor(
                 _state.update { it.copy(
                     userFav = it.userFav.plus(shoe)
                 ) }
-                println("New UserFav: ${_state.value.userFav}")
             }
         }
     }
@@ -74,7 +106,6 @@ class MainViewModel @Inject constructor(
                 _state.update { it.copy(
                     userCart = it.userFav.plus(shoe)
                 ) }
-                println("New UserCart: ${_state.value.userCart}")
             }
         }
     }
@@ -86,7 +117,6 @@ class MainViewModel @Inject constructor(
                 _state.update { it.copy(
                     userFav = it.userFav.minus(shoe)
                 ) }
-                println("New UserFav: ${_state.value.userFav}")
             }
         }
     }
@@ -98,32 +128,15 @@ class MainViewModel @Inject constructor(
                 _state.update { it.copy(
                     userCart = it.userFav.minus(shoe)
                 ) }
-                println("New UserCart: ${_state.value.userCart}")
             }
         }
-    }
-
-    fun NavController.shoeDetail(shoe: Shoe) {
-        // TODO
     }
 
     fun NavController.allShoes() {
         // TODO
     }
 
-    fun NavController.onTagClick(tag: ShoeTag) {
-        // TODO
-    }
-
     fun NavController.onCategoryClick(category: ShoeCategory) {
-        // TODO
-    }
-
-    fun NavController.allPopularShoes() {
-        // TODO
-    }
-
-    fun NavController.allNewShoes() {
         // TODO
     }
 

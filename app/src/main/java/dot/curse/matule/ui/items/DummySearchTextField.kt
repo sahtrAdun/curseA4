@@ -1,4 +1,4 @@
-package dot.curse.matule.ui.screens.main.comp
+package dot.curse.matule.ui.items
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun DummySearchTextField(
     modifier: Modifier = Modifier,
+    withFilterButton: Boolean = true,
     onDummyClick: () -> Unit,
     onFilterClick: () -> Unit
 ) {
@@ -65,22 +66,25 @@ fun DummySearchTextField(
                 )
             }
         }
-        Box(modifier = Modifier
-            .fillMaxHeight()
-            .aspectRatio(1f)
-            .background(
-                color = MaterialTheme.colorScheme.primary,
-                shape = CircleShape
-            )
-            .clickable(null, null) { onFilterClick() },
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.filter),
-                tint = MaterialTheme.colorScheme.onPrimary,
-                contentDescription = null,
-                modifier = Modifier.size(24.dp)
-            )
+        if (withFilterButton) {
+            Box(modifier = Modifier
+                .fillMaxHeight()
+                .aspectRatio(1f)
+                .background(
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = CircleShape
+                )
+                .clickable(null, null) { onFilterClick() },
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.filter),
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
         }
+
     }
 }

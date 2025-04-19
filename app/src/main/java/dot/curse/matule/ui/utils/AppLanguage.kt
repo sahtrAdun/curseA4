@@ -33,4 +33,23 @@ object AppLanguage {
         updateLanguage(language)
     }
 
+    fun String.translateToSystemDefault(): String {
+        val code = getSystemLanguage()
+        return when(code) {
+            "ru" -> {
+                when {
+                    /* Категории */
+                    this.contains("outdoor", ignoreCase = true) -> "Уличные"
+                    this.contains("sport", ignoreCase = true) -> "Спортивные"
+                    /* Тэги */
+                    this.contains("new", ignoreCase = true) -> "Новые"
+                    this.contains("popular", ignoreCase = true) -> "Популярные"
+                    this.contains("old", ignoreCase = true) -> "Старые"
+                    else -> ""
+                }
+            }
+            else -> this
+        }
+    }
+
 }

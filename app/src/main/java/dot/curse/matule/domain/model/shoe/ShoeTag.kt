@@ -1,5 +1,8 @@
 package dot.curse.matule.domain.model.shoe
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 enum class ShoeTag(
     val value: String
 ) {

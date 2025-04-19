@@ -63,10 +63,17 @@
     <string name="main_label_category">Категории</string>
     <string name="main_label_popular">Популярное</string>
     <string name="main_see_all">Все</string>
-    <string name="main_label_sales">Акции</string>
+    <string name="main_label_new">Новое</string>
     <string name="title_favor">Избранное</string>
     <string name="title_cart">Корзина</string>
     <string name="title_filter">Фильтры</string>
     <string name="title_result">Результат</string>
     <string name="title_detail">Детали</string>
+    <string name="date_in">в</string>
+    <string name="date_minutes">минут назад</string>
+    <string name="date_hours">часов назад</string>
+    <string name="date_today">Сегодня в</string>
+    <string name="date_yesterday">Вчера в</string>
+    <string name="date_seconds">секунд назад</string>
+    <string name="main_row_item_all">Все</string>
 </resources>

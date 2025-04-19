@@ -1,4 +1,4 @@
-package dot.curse.matule.ui.screens.main.comp
+package dot.curse.matule.ui.items
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,11 +16,11 @@ import androidx.compose.ui.unit.dp
 import dot.curse.matule.R
 
 @Composable
-fun MainLabelRow(
+fun LabelRow(
     modifier: Modifier = Modifier,
     label: String,
-    withAll: Boolean,
-    onAllClick: () -> Unit,
+    withAll: Boolean = false,
+    onAllClick: () -> Unit = {},
     content: @Composable () -> Unit
 ) {
     Column(modifier = modifier,

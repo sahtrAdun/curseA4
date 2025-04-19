@@ -2,19 +2,19 @@ package dot.curse.matule.data.repository
 
 import dot.curse.matule.domain.model.CheckOtpResult
 import dot.curse.matule.domain.model.SendOtpRequest
+import dot.curse.matule.domain.model.shoe.ShoeDot
 import dot.curse.matule.domain.model.user.User
 import dot.curse.matule.domain.model.user.UserDot
 import dot.curse.matule.domain.model.user.UserPost
-import dot.curse.matule.domain.model.user.notDefault
 import dot.curse.matule.domain.repository.ApiRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.accept
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.patch
 import io.ktor.client.request.post
-import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
@@ -28,6 +28,9 @@ class ApiRepositoryImpl @Inject constructor(
 
     companion object {
         const val COLLECTION_USERS = "rest/v1/users"
+        const val COLLECTION_USERS_FAV = "rest/v1/users_fav"
+        const val COLLECTION_USERS_CART = "rest/v1/users_cart"
+        const val COLLECTION_SHOES = "rest/v1/shoes"
     }
 
     override suspend fun getAllUsers(): Result<List<UserDot>> {
@@ -47,8 +50,8 @@ class ApiRepositoryImpl @Inject constructor(
         return try {
             client.get("/$COLLECTION_USERS") {
                 parameter("id", "eq.$userId")
-            }.body<UserDot>().let { body ->
-                Result.success(body)
+            }.body<List<UserDot>>().let { body ->
+                Result.success(body.first())
             }
         } catch (e: Exception) {
             println("Exception getUserById($userId):\n${e.message}")
@@ -179,6 +182,170 @@ class ApiRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             println("Error sending OTP: ${e.message}")
             Result.failure(e)
+        }
+    }
+
+    override suspend fun getUserFavorites(userId: Int): Result<List<ShoeDot>> {
+        return try {
+            val response = client.post("/rest/v1/rpc/get_user_favorites") {
+                setBody(mapOf("user_id" to userId))
+            }
+            println("Response getUserFavorites($userId) --- ${response.bodyAsText()}")
+            if (response.status == HttpStatusCode.OK) {
+                Result.success(response.body<List<ShoeDot>>())
+            } else {
+                Result.success(emptyList<ShoeDot>())
+            }
+        } catch (e: Exception) {
+            println("Exception getUserFavorites($userId) --- ${e.message}")
+            return Result.failure(e)
+        }
+    }
+
+    override suspend fun addShoeToUserFavorites(userId: Int, shoeId: Int): Result<Boolean> {
+        return try {
+            val response = client.post("/$COLLECTION_USERS_FAV") {
+                setBody(mapOf(
+                    "user_id" to userId,
+                    "shoe_id" to shoeId
+                ))
+            }
+            println("Response addShoeToUserFavorites($userId, $shoeId) --- ${response.bodyAsText()}")
+            if (response.status == HttpStatusCode.Created) {
+                Result.success(
+                    response.bodyAsText().contains("error", ignoreCase = true) == false
+                )
+            } else {
+                Result.success(false)
+            }
+        } catch (e: Exception) {
+            println("Exception addShoeToUserFavorites($userId, $shoeId) --- ${e.message}")
+            return Result.failure(e)
+        }
+    }
+
+    override suspend fun deleteShoeFromUserFavorites(userId: Int, shoeId: Int): Result<Boolean> {
+        return try {
+            val response = client.delete("/$COLLECTION_USERS_FAV") {
+                parameter("user_id", "eq.$userId")
+                parameter("shoe_id", "eq.$shoeId")
+            }
+            println("Response deleteShoeFromUserFavorites($userId, $shoeId) --- ${response.bodyAsText()}")
+            if (response.status == HttpStatusCode.NoContent || response.status == HttpStatusCode.OK) {
+                Result.success(
+                    response.bodyAsText().contains("error", ignoreCase = true) == false
+                )
+            } else {
+                Result.success(false)
+            }
+        } catch (e: Exception) {
+            println("Exception deleteShoeToUserFavorites($userId, $shoeId) --- ${e.message}")
+            return Result.failure(e)
+        }
+    }
+
+    override suspend fun getUserCart(userId: Int): Result<List<ShoeDot>> {
+        return try {
+            val response = client.post("/rest/v1/rpc/get_user_cart") {
+                setBody(mapOf("user_id" to userId))
+            }
+            if (response.status == HttpStatusCode.OK) {
+                Result.success(response.body<List<ShoeDot>>())
+            } else {
+                Result.success(emptyList<ShoeDot>())
+            }
+        } catch (e: Exception) {
+            println("Exception getUserCart($userId) --- ${e.message}")
+            return Result.failure(e)
+        }
+    }
+
+    override suspend fun addShoeToUserCart(userId: Int, shoeId: Int): Result<Boolean> {
+        return try {
+            val response = client.post("/$COLLECTION_USERS_CART") {
+                setBody(mapOf(
+                    "user_id" to userId,
+                    "shoe_id" to shoeId
+                ))
+            }
+            if (response.status == HttpStatusCode.Created) {
+                Result.success(
+                    response.bodyAsText().contains("error", ignoreCase = true) == false
+                )
+            } else {
+                Result.success(false)
+            }
+        } catch (e: Exception) {
+            println("Exception addShoeToUserCart($userId, $shoeId) --- ${e.message}")
+            return Result.failure(e)
+        }
+    }
+
+    override suspend fun deleteShoeFromUserCart(userId: Int, shoeId: Int): Result<Boolean> {
+        return try {
+            val response = client.delete("/$COLLECTION_USERS_CART") {
+                parameter("user_id", "eq.$userId")
+                parameter("shoe_id", "eq.$shoeId")
+            }
+            if (response.status == HttpStatusCode.NoContent || response.status == HttpStatusCode.OK) {
+                Result.success(
+                    response.bodyAsText().contains("error", ignoreCase = true) == false
+                )
+            } else {
+                Result.success(false)
+            }
+        } catch (e: Exception) {
+            println("Exception deleteShoeToUserCart($userId, $shoeId) --- ${e.message}")
+            return Result.failure(e)
+        }
+    }
+
+    override suspend fun getAllShoe(): Result<List<ShoeDot>> {
+        return try {
+            val response = client.get("/$COLLECTION_SHOES") {
+                parameter("select", "*")
+            }
+            if (response.status == HttpStatusCode.OK) {
+                Result.success(response.body<List<ShoeDot>>())
+            } else {
+                Result.success(emptyList<ShoeDot>())
+            }
+        } catch (e: Exception) {
+            println("Exception getAllShoe() --- ${e.message}")
+            return Result.failure(e)
+        }
+    }
+
+    override suspend fun getShoesByTag(tag: String): Result<List<ShoeDot>> {
+        return try {
+            val response = client.get("/$COLLECTION_SHOES") {
+                parameter("tag", "eq.$tag")
+            }
+            if (response.status == HttpStatusCode.OK) {
+                Result.success(response.body<List<ShoeDot>>())
+            } else {
+                Result.success(emptyList<ShoeDot>())
+            }
+        } catch (e: Exception) {
+            println("Exception getShoesByTag($tag) --- ${e.message}")
+            return Result.failure(e)
+        }
+    }
+
+    override suspend fun getShoesByCategory(category: String): Result<List<ShoeDot>> {
+        return try {
+            val response = client.get("/$COLLECTION_SHOES") {
+                parameter("category", "eq.$category")
+            }
+            println("Response getShoesByCategory($category) --- ${response.bodyAsText()}")
+            if (response.status == HttpStatusCode.OK) {
+                Result.success(response.body<List<ShoeDot>>())
+            } else {
+                Result.success(emptyList<ShoeDot>())
+            }
+        } catch (e: Exception) {
+            println("Exception getShoesByCategory($category) --- ${e.message}")
+            return Result.failure(e)
         }
     }
 

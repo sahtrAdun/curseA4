@@ -2,12 +2,14 @@ package dot.curse.matule.domain.model
 
 import dot.curse.matule.domain.model.shoe.ShoeCategory
 import dot.curse.matule.domain.model.shoe.ShoeTag
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class SearchFilter(
-    val text: String? = null,
-    val sale: Boolean? = null,
-    val priceBetween: Map<Int, Int> = mapOf(0 to 100000),
-    val shoeCategory: ShoeCategory? = null,
-    val shoeTag: ShoeTag? = null,
-    val colors: List<String>? = null
+    @SerialName("text") val text: String? = null,
+    @SerialName("price_between") val priceBetween: Map<Int, Int>? = null,
+    @SerialName("shoe_category") val shoeCategory: ShoeCategory? = null,
+    @SerialName("shoe_tag") val shoeTag: ShoeTag? = null,
+    @SerialName("colors") val colors: List<String>? = null
 )

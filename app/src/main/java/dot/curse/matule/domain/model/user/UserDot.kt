@@ -1,9 +1,10 @@
 package dot.curse.matule.domain.model.user
 
+import dot.curse.matule.ui.utils.MyDateSerializer.serializeDateToString
+import dot.curse.matule.ui.utils.TimeManager.convertToLocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import kotlin.collections.isNotEmpty
 
 @Serializable
 data class UserDot (
@@ -32,7 +33,7 @@ fun UserDot.toUser(): User {
             emptyList()
         },
         avatar = this.avatar?: "null",
-        date = this.date?: "null",
+        date = serializeDateToString(convertToLocalDateTime(this.date!!))
     )
 }
 

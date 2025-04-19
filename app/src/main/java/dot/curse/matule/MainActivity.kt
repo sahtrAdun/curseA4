@@ -25,6 +25,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dot.curse.matule.data.storage.SharedManager
+import dot.curse.matule.domain.model.SearchFilter
 import dot.curse.matule.ui.items.header.MatuleHeader
 import dot.curse.matule.ui.screens.boarding.OnBoardingViewModel
 import dot.curse.matule.ui.screens.boarding.comp.OnBoardingScreen
@@ -36,6 +37,7 @@ import dot.curse.matule.ui.screens.otpemail.OtpEmailViewModel
 import dot.curse.matule.ui.screens.otpemail.comp.OtpEmailScreen
 import dot.curse.matule.ui.screens.otpnewpassword.OtpNewPasswordViewModel
 import dot.curse.matule.ui.screens.otpnewpassword.comp.OtpNewPasswordScreen
+import dot.curse.matule.ui.screens.searchresult.SearchResultViewModel
 import dot.curse.matule.ui.screens.signin.SignInViewModel
 import dot.curse.matule.ui.screens.signin.comp.SignInScreen
 import dot.curse.matule.ui.screens.signup.SignUpViewModel
@@ -50,9 +52,11 @@ import dot.curse.matule.ui.utils.OTPEmailRoute
 import dot.curse.matule.ui.utils.OTPNewPasswordRoute
 import dot.curse.matule.ui.utils.OnBoardingRoute
 import dot.curse.matule.ui.utils.Routes
+import dot.curse.matule.ui.utils.SearchResultRoute
 import dot.curse.matule.ui.utils.SignInRoute
 import dot.curse.matule.ui.utils.SignUpRoute
 import dot.curse.matule.ui.utils.SplashScreenRoute
+import kotlinx.serialization.json.Json
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -186,6 +190,18 @@ class MainActivity : ComponentActivity() {
                                 viewModel = viewModel,
                                 navController = navController
                             )
+                        }
+
+                        composable<SearchResultRoute> { stack ->
+                            loading = false
+                            background = MaterialTheme.colorScheme.background
+                            val viewModel = hiltViewModel<SearchResultViewModel>()
+
+                            val filter = stack.arguments?.getString("filter")?.let {
+                                Json.decodeFromString<SearchFilter>(it)
+                            }?: SearchFilter()
+                            viewModel.parseSearchFilter(filter)
+
                         }
 
                     }
