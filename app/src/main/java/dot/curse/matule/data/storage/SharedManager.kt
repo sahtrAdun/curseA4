@@ -37,13 +37,20 @@ class SharedManager(context: Context) {
         }
     }
 
+    fun clearUserData() {
+        setLocalUserId(-1)
+        sharedPreferences.edit {
+            remove("current_user")
+        }
+    }
+
     fun getDarkTheme(): Boolean {
         return sharedPreferences.getBoolean("dark_theme", false)
     }
 
-    /*fun setDarkTheme(value: Boolean) {
+    fun setDarkTheme(value: Boolean) {
         sharedPreferences.edit { putBoolean("dark_theme", value) }
-    }*/
+    }
 
     fun getLanguage(): String? {
         return sharedPreferences.getString("app_language_code", null)

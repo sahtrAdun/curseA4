@@ -31,6 +31,11 @@ object Validation {
         return answer
     }
 
+    fun Context.validatePhone(phone: String): Boolean {
+        val answer = Patterns.PHONE.matcher(phone).matches()
+        return answer
+    }
+
     fun Context.validatePassword(password: String): Int {
         var strength = 1
         if (password.length !in 8..20) {

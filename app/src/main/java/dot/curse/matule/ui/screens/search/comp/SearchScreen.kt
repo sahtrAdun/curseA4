@@ -50,7 +50,7 @@ fun SearchScreen(
 
     Column(modifier = modifier
         .fillMaxSize()
-        .padding(horizontal = 20.dp, vertical = 20.dp)
+        .padding(horizontal = 20.dp)
         .clickable(null, null) {
             keyboard?.hide()
             focusManager.clearFocus()
@@ -59,7 +59,8 @@ fun SearchScreen(
     ) {
         Column(
             modifier = Adaptive()
-                .adaptiveElementWidthMedium(),
+                .adaptiveElementWidthMedium()
+                .padding(vertical = 20.dp),
             verticalArrangement = Arrangement.spacedBy(30.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

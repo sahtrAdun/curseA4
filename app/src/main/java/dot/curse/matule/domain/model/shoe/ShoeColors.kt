@@ -18,7 +18,3 @@ enum class ShoeColors(
 fun String.toShoeColor(): ShoeColors? {
     return ShoeColors.entries.find { it.value.contains(this, ignoreCase = true) }
 }
-
-fun Color.toShoeColor(): ShoeColors? {
-    return ShoeColors.entries.find { it.color == this }
-}

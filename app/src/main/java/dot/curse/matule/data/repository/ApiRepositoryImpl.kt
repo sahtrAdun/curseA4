@@ -1,11 +1,21 @@
 package dot.curse.matule.data.repository
 
+import android.content.Context
+import android.net.Uri
+import dot.curse.matule.data.api.IGNORE_URL
 import dot.curse.matule.domain.model.CheckOtpResult
 import dot.curse.matule.domain.model.SendOtpRequest
+import dot.curse.matule.domain.model.notification.Notification
+import dot.curse.matule.domain.model.notification.NotificationDot
+import dot.curse.matule.domain.model.notification.toNotificationPost
+import dot.curse.matule.domain.model.order.Order
+import dot.curse.matule.domain.model.order.OrderDot
+import dot.curse.matule.domain.model.order.toOrderPost
 import dot.curse.matule.domain.model.shoe.ShoeDot
 import dot.curse.matule.domain.model.user.User
 import dot.curse.matule.domain.model.user.UserDot
 import dot.curse.matule.domain.model.user.UserPost
+import dot.curse.matule.domain.model.user.toUserPost
 import dot.curse.matule.domain.repository.ApiRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -20,6 +30,7 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
+import java.io.File
 import javax.inject.Inject
 
 class ApiRepositoryImpl @Inject constructor(
@@ -31,6 +42,9 @@ class ApiRepositoryImpl @Inject constructor(
         const val COLLECTION_USERS_FAV = "rest/v1/users_fav"
         const val COLLECTION_USERS_CART = "rest/v1/users_cart"
         const val COLLECTION_SHOES = "rest/v1/shoes"
+        const val COLLECTION_NOTIFICATIONS = "rest/v1/notifications"
+        const val COLLECTION_ORDERS = "rest/v1/orders"
+        const val STORAGE_AVATARS = "storage/v1/object/avatars"
     }
 
     override suspend fun getAllUsers(): Result<List<UserDot>> {
@@ -77,13 +91,16 @@ class ApiRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateUser(user: User): Result<UserDot> {
+    override suspend fun updateUser(user: User): Result<Boolean> {
         return try {
-            client.patch("/$COLLECTION_USERS") {
+            val response = client.patch("/$COLLECTION_USERS") {
                 parameter("id", "eq.${user.id}")
-                setBody(user)
-            }.body<UserDot>().let { body ->
-                Result.success(body)
+                setBody(user.toUserPost())
+            }
+            if (response.status == HttpStatusCode.NoContent) {
+                Result.success(response.bodyAsText().contains("error", true) == false)
+            } else {
+                Result.success(false)
             }
         } catch (e: Exception) {
             println("Exception updateUser($user):\n${e.message}")
@@ -181,6 +198,55 @@ class ApiRepositoryImpl @Inject constructor(
             }
         } catch (e: Exception) {
             println("Error sending OTP: ${e.message}")
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun uploadAvatar(context: Context, user: User, uri: Uri): Result<Boolean> {
+        return try {
+            val name = "avatar_${user.id}_${System.currentTimeMillis()}.jpg"
+
+            val inputStream = context.contentResolver.openInputStream(uri)
+            val tempFile = File.createTempFile("temp", null, context.cacheDir)
+            inputStream?.copyTo(tempFile.outputStream())
+            inputStream?.close()
+
+            val response = client.post("/$STORAGE_AVATARS/$name") {
+                contentType(ContentType.Application.OctetStream)
+                setBody(tempFile.readBytes())
+            }
+
+            if (response.status.value in 200..299) {
+                val update = updateUser(user.copy(
+                    avatar = "$IGNORE_URL/$STORAGE_AVATARS/$name"
+                ))
+                Result.success(update.getOrElse { false } == true)
+            } else {
+                Result.success(false)
+            }
+        } catch (e: Exception) {
+            println("Exception uploadAvatar(user = $user, fileUri = $uri): ${e.message} --- ${e.cause}")
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getShoeById(id: Int): Result<ShoeDot> {
+        return try {
+            val response = client.get("/$COLLECTION_SHOES") {
+                parameter("id", "eq.$id")
+            }
+            if (response.status == HttpStatusCode.OK) {
+                val body = response.body<List<ShoeDot>>()
+                if (body.isNotEmpty()) {
+                    Result.success(body.first())
+                } else {
+                    Result.failure(NoSuchElementException("Error"))
+                }
+            } else {
+                Result.failure(Exception("HTTP error: ${response.status}"))
+            }
+        } catch (e: Exception) {
+            println("Exception getShoeById($id):\n${e.message}")
             Result.failure(e)
         }
     }
@@ -300,6 +366,24 @@ class ApiRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun clearUserCart(userId: Int): Result<Boolean> {
+        return try {
+            val response = client.delete("/$COLLECTION_USERS_CART") {
+                parameter("user_id", "eq.$userId")
+            }
+            if (response.status == HttpStatusCode.NoContent || response.status == HttpStatusCode.OK) {
+                Result.success(
+                    response.bodyAsText().contains("error", ignoreCase = true) == false
+                )
+            } else {
+                Result.success(false)
+            }
+        } catch (e: Exception) {
+            println("Exception clearUserCart($userId) --- ${e.message}")
+            return Result.failure(e)
+        }
+    }
+
     override suspend fun getAllShoe(): Result<List<ShoeDot>> {
         return try {
             val response = client.get("/$COLLECTION_SHOES") {
@@ -345,6 +429,91 @@ class ApiRepositoryImpl @Inject constructor(
             }
         } catch (e: Exception) {
             println("Exception getShoesByCategory($category) --- ${e.message}")
+            return Result.failure(e)
+        }
+    }
+
+    override suspend fun getNotificationByUserId(id: Int): Result<List<NotificationDot>> {
+        return try {
+            val response = client.get("/$COLLECTION_NOTIFICATIONS") {
+                parameter("user_id", "eq.$id")
+            }
+            if (response.status == HttpStatusCode.OK) {
+                Result.success(response.body<List<NotificationDot>>())
+            } else {
+                Result.success(emptyList<NotificationDot>())
+            }
+        } catch (e: Exception) {
+            println("Exception getNotificationByUserId($id) --- ${e.message}")
+            return Result.failure(e)
+        }
+    }
+
+    override suspend fun sendNotificationToUser(not: Notification): Result<Boolean> {
+        return try {
+            val response = client.post("/$COLLECTION_NOTIFICATIONS") {
+                setBody(not.toNotificationPost())
+            }
+            if (response.status == HttpStatusCode.Created) {
+                Result.success(response.bodyAsText().contains("error", true) == false)
+            } else {
+                Result.success(false)
+            }
+        } catch (e: Exception) {
+            println("Exception sendNotificationToUser($not) --- ${e.message}")
+            return Result.failure(e)
+        }
+    }
+
+    override suspend fun getAllUserOrders(id: Int): Result<List<OrderDot>> {
+        return try {
+            val response = client.get("/$COLLECTION_ORDERS") {
+                parameter("user_id", "eq.$id")
+            }
+            if (response.status == HttpStatusCode.OK) {
+                Result.success(response.body<List<OrderDot>>())
+            } else {
+                Result.success(emptyList<OrderDot>())
+            }
+        } catch (e: Exception) {
+            println("Exception getAllUserOrders($id) --- ${e.message}")
+            return Result.failure(e)
+        }
+    }
+
+    override suspend fun deleteOrder(id: Int): Result<Boolean> {
+        return try {
+            val response = client.delete("/$COLLECTION_ORDERS") {
+                parameter("id", "eq.$id")
+            }
+            if (response.status == HttpStatusCode.NoContent || response.status == HttpStatusCode.OK) {
+                Result.success(true)
+            } else {
+                Result.success(false)
+            }
+        } catch (e: Exception) {
+            println("Exception deleteOrder($id) --- ${e.message}")
+            return Result.failure(e)
+        }
+    }
+
+    override suspend fun newOrder(order: Order): Result<Boolean> {
+        return try {
+            val response = client.post("/$COLLECTION_ORDERS") {
+                setBody(order.toOrderPost())
+            }
+            if (response.status == HttpStatusCode.Created) {
+                val notification = sendNotificationToUser(Notification(
+                    userId = order.userId,
+                    label = "New order",
+                    description = "Thank you for using our service!"
+                ))
+                Result.success(notification.getOrElse { false } == true)
+            } else {
+                Result.success(false)
+            }
+        } catch (e: Exception) {
+            println("Exception newOrder($order) --- ${e.message}")
             return Result.failure(e)
         }
     }

@@ -13,6 +13,7 @@ import dot.curse.matule.domain.model.shoe.ShoeCategory
 import dot.curse.matule.domain.model.shoe.ShoeTag
 import dot.curse.matule.domain.repository.ShoeRepository
 import dot.curse.matule.domain.repository.UserRepository
+import dot.curse.matule.ui.utils.DetailRoute
 import dot.curse.matule.ui.utils.SearchResultRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -136,7 +137,7 @@ class SearchResultViewModel @Inject constructor(
     }
 
     fun NavController.shoeDetail(shoe: Shoe) {
-        // TODO Переход
+        navigate(DetailRoute(shoe = Json.encodeToString<Shoe>(shoe)))
     }
 
     fun NavController.allShoes() {

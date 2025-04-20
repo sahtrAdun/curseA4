@@ -39,7 +39,8 @@ import dot.curse.matule.ui.utils.OnBoardingRoute
 fun MatuleHeader(
     modifier: Modifier = Modifier,
     currentRoute: String?,
-    navController: NavController
+    navController: NavController,
+    menuCallBack: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -56,6 +57,14 @@ fun MatuleHeader(
                 currentRoute?.contains(Routes.SearchResultRoute.patch, ignoreCase = true) == true -> context.getString(R.string.title_result)
                 currentRoute?.contains(Routes.FavoritesRoute.patch, ignoreCase = true) == true -> context.getString(R.string.title_favor)
                 currentRoute?.contains(Routes.SearchRoute.patch, ignoreCase = true) == true -> context.getString(R.string.title_search)
+                currentRoute?.contains(Routes.FilterRoute.patch, ignoreCase = true) == true -> context.getString(R.string.title_filter)
+                currentRoute?.contains(Routes.DetailRoute.patch, ignoreCase = true) == true -> context.getString(R.string.title_detail)
+                currentRoute?.contains(Routes.SettingsRoute.patch, ignoreCase = true) == true -> context.getString(R.string.title_settings)
+                currentRoute?.contains(Routes.ProfileRoute.patch, ignoreCase = true) == true -> context.getString(R.string.title_profile)
+                currentRoute?.contains(Routes.CartRoute.patch, ignoreCase = true) == true -> context.getString(R.string.title_order_cart)
+                currentRoute?.contains(Routes.OrderRoute.patch, ignoreCase = true) == true -> context.getString(R.string.title_order_cart)
+                currentRoute?.contains(Routes.NotificationRoute.patch, ignoreCase = true) == true -> context.getString(R.string.title_notifications)
+                currentRoute?.contains(Routes.OrderListRoute.patch, ignoreCase = true) == true -> context.getString(R.string.title_orders)
                 else -> ""
             }
         }
@@ -82,7 +91,9 @@ fun MatuleHeader(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 when(currentRoute) {
-                    Routes.MainRoute.patch -> { // TODO Добавить <ProfileRoute> и <NotificationRoute>
+                    Routes.NotificationRoute.patch,
+                    Routes.ProfileRoute.patch,
+                    Routes.MainRoute.patch -> {
                         Icon(
                             imageVector = ImageVector.vectorResource(
                                 if (SharedManager(context).getDarkTheme() == true) R.drawable.hamburger_light else R.drawable.hamburger
@@ -92,7 +103,7 @@ fun MatuleHeader(
                             modifier = Modifier
                                 .size(30.dp)
                                 .clickable(null, null) {
-                                    // TODO Открытие меню <MenuRoute>
+                                    menuCallBack()
                                 }
                         )
                     }

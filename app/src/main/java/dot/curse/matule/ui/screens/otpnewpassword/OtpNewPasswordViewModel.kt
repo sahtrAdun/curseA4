@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import dot.curse.matule.R
-import dot.curse.matule.domain.model.user.User
 import dot.curse.matule.domain.model.user.UserPost
 import dot.curse.matule.domain.repository.UserRepository
 

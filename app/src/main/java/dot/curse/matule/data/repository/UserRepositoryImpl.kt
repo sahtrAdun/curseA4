@@ -1,5 +1,7 @@
 package dot.curse.matule.data.repository
 
+import android.content.Context
+import android.net.Uri
 import dot.curse.matule.domain.model.user.User
 import dot.curse.matule.domain.model.user.UserPost
 import dot.curse.matule.domain.model.user.toUser
@@ -30,11 +32,9 @@ class UserRepositoryImpl @Inject constructor(
         return userDotResult
     }
 
-    override suspend fun updateUser(user: User): Result<User> {
+    override suspend fun updateUser(user: User): Result<Boolean> {
         val userDotResult = api.updateUser(user)
-        return userDotResult.map { userDot ->
-            userDot.toUser()
-        }
+        return userDotResult
     }
 
     override suspend fun updateUserByEmail(user: UserPost): Result<Boolean> {
@@ -62,6 +62,10 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun checkOtp(email: String, otp: String): Result<Boolean> {
         return api.checkOtp(email, otp)
+    }
+
+    override suspend fun uploadAvatar(context: Context, user: User, uri: Uri): Result<Boolean> {
+        return api.uploadAvatar(context, user, uri)
     }
 
 

@@ -9,10 +9,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dot.curse.matule.data.storage.SharedManager
 import dot.curse.matule.domain.model.SearchFilter
 import dot.curse.matule.domain.model.shoe.Shoe
-import dot.curse.matule.domain.model.shoe.ShoeCategory
 import dot.curse.matule.domain.model.shoe.ShoeTag
 import dot.curse.matule.domain.repository.ShoeRepository
 import dot.curse.matule.domain.repository.UserRepository
+import dot.curse.matule.ui.utils.DetailRoute
 import dot.curse.matule.ui.utils.SearchResultRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -43,17 +43,6 @@ class FavoritesViewModel @Inject constructor(
                 userCart = shoeApi.getUserCart(it.currentUser.id).getOrElse { emptyList() },
                 loading = false
             ) }
-        }
-    }
-
-    fun addToFavorite(shoe: Shoe) {
-        viewModelScope.launch {
-            val response = shoeApi.addShoeToUserFavorites(_state.value.currentUser.id, shoe.id)
-            if (response.getOrElse { false } == true) {
-                _state.update { it.copy(
-                    list = it.list.plus(shoe)
-                ) }
-            }
         }
     }
 
@@ -91,22 +80,12 @@ class FavoritesViewModel @Inject constructor(
     }
 
     fun NavController.shoeDetail(shoe: Shoe) {
-        // TODO Переход
-    }
-
-    fun NavController.allShoes() {
-        navigate(SearchResultRoute(filter = Json.encodeToString<SearchFilter>(SearchFilter())))
+        navigate(DetailRoute(shoe = Json.encodeToString<Shoe>(shoe)))
     }
 
     fun NavController.onTagClick(tag: ShoeTag) {
         navigate(SearchResultRoute(filter = Json.encodeToString<SearchFilter>(SearchFilter(
             shoeTag = tag
-        ))))
-    }
-
-    fun NavController.onCategoryClick(category: ShoeCategory) {
-        navigate(SearchResultRoute(filter = Json.encodeToString<SearchFilter>(SearchFilter(
-            shoeCategory = category
         ))))
     }
 

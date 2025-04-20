@@ -2,7 +2,6 @@ package dot.curse.matule.ui.utils
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -64,9 +63,9 @@ open class Adaptive {
     fun adaptiveElementWidthSmall(): Modifier {
         val screenSize = getScreenSize()
         return if (screenSize.screenWidth == ScreenSizeMetric.SMALL) {
-            Modifier.fillMaxWidth().padding(horizontal = 30.dp)
+            Modifier.fillMaxWidth(0.8f)
         } else {
-            Modifier.fillMaxWidth(0.6f)
+            Modifier.fillMaxWidth(0.5f)
         }
     }
 

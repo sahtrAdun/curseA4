@@ -40,13 +40,14 @@ fun MainScreen(
 
     Column(modifier = modifier
         .fillMaxSize()
-        .padding(horizontal = 20.dp, vertical = 20.dp)
+        .padding(horizontal = 20.dp)
         .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Column(
             modifier = Adaptive()
-                .adaptiveElementWidthMedium(),
+                .adaptiveElementWidthMedium()
+                .padding(vertical = 20.dp),
             verticalArrangement = Arrangement.spacedBy(15.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -139,4 +140,5 @@ fun MainScreen(
             }
         }
     }
+
 }

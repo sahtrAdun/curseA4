@@ -26,8 +26,11 @@ import androidx.navigation.NavController
 import dot.curse.matule.ui.utils.Routes
 import dot.curse.matule.R
 import dot.curse.matule.ui.utils.Adaptive
+import dot.curse.matule.ui.utils.CartRoute
 import dot.curse.matule.ui.utils.FavoritesRoute
 import dot.curse.matule.ui.utils.MainRoute
+import dot.curse.matule.ui.utils.NotificationRoute
+import dot.curse.matule.ui.utils.ProfileRoute
 
 @Composable
 fun MatuleFooter(
@@ -36,72 +39,92 @@ fun MatuleFooter(
     currentRoute: String
 ) {
     var show by remember { mutableStateOf(false) }
-    show = when(currentRoute) {
-        Routes.SplashScreenRoute.patch,
-        Routes.SearchResultRoute.patch,
-        Routes.SearchRoute.patch,
-        Routes.FavoritesRoute.patch,
-        Routes.OnBoardingRoute.patch -> false
+    show = when {
+        currentRoute.contains(Routes.SplashScreenRoute.patch, true) ||
+        currentRoute.contains(Routes.OnBoardingRoute.patch, true) ||
+        currentRoute.contains(Routes.SignInRoute.patch, true) ||
+        currentRoute.contains(Routes.SignUpRoute.patch, true) ||
+        currentRoute.contains(Routes.OTPCodeRoute.patch, true) ||
+        currentRoute.contains(Routes.OTPEmailRoute.patch, true) ||
+        currentRoute.contains(Routes.OTPNewPasswordRoute.patch, true) ||
+        currentRoute.contains(Routes.SearchResultRoute.patch, true) ||
+        currentRoute.contains(Routes.SearchRoute.patch, true) ||
+        currentRoute.contains(Routes.FavoritesRoute.patch, true) ||
+        currentRoute.contains(Routes.FilterRoute.patch, true) ||
+        currentRoute.contains(Routes.DetailRoute.patch, true) ||
+        currentRoute.contains(Routes.SettingsRoute.patch, true) ||
+        currentRoute.contains(Routes.CartRoute.patch, true) ||
+        currentRoute.contains(Routes.OrderRoute.patch, true) ||
+        currentRoute.contains(Routes.OrderListRoute.patch, true) ||
+        currentRoute.contains(Routes.OnBoardingRoute.patch, true) -> false
         else -> true
     }
-    Box(modifier = modifier
-        .fillMaxWidth()
-        .background(color = MaterialTheme.colorScheme.surface),
-        contentAlignment = Alignment.Center
-    ) {
-        Row(modifier = Adaptive()
-            .adaptiveElementWidthMedium()
-            .padding(vertical = 10.dp, horizontal = 30.dp)
-            .padding(bottom = 10.dp),
-            verticalAlignment = Alignment.CenterVertically
+    if (show) {
+        Box(modifier = modifier
+            .fillMaxWidth()
+            .background(color = MaterialTheme.colorScheme.surface),
+            contentAlignment = Alignment.Center
         ) {
-            FooterIcon(
-                icon = R.drawable.bar_home,
-                selected = currentRoute == Routes.MainRoute.patch,
-            ) {
-                navController.navigate(MainRoute) {
-                    popUpTo(MainRoute) { inclusive = true }
-                }
-            }
-            Spacer(Modifier.weight(2f))
-            FooterIcon(
-                icon = R.drawable.bar_heart,
-                selected = currentRoute == Routes.FavoritesRoute.patch,
-            ) {
-                navController.navigate(FavoritesRoute) {
-                    popUpTo(FavoritesRoute) { inclusive = true }
-                }
-            }
-            Spacer(Modifier.weight(3f))
-            Box(modifier = Modifier
-                .size(48.dp)
-                .background(
-                    color = MaterialTheme.colorScheme.primary,
-                    shape = CircleShape
-                ),
-                contentAlignment = Alignment.Center
+            Row(modifier = Adaptive()
+                .adaptiveElementWidthMedium()
+                .padding(vertical = 10.dp, horizontal = 30.dp)
+                .padding(bottom = 10.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 FooterIcon(
-                    icon = R.drawable.bar_bag,
-                    allowChange = false,
-                    selected = false//currentRoute == Routes.MainRoute.patch,
+                    icon = R.drawable.bar_home,
+                    selected = currentRoute == Routes.MainRoute.patch,
                 ) {
-
+                    navController.navigate(MainRoute) {
+                        popUpTo(MainRoute) { inclusive = true }
+                    }
                 }
-            }
-            Spacer(Modifier.weight(3f))
-            FooterIcon(
-                icon = R.drawable.bar_not,
-                selected = false//currentRoute == Routes.MainRoute.patch,
-            ) {
-
-            }
-            Spacer(Modifier.weight(2f))
-            FooterIcon(
-                icon = R.drawable.bar_profile,
-                selected = false//currentRoute == Routes.MainRoute.patch,
-            ) {
-
+                Spacer(Modifier.weight(2f))
+                FooterIcon(
+                    icon = R.drawable.bar_heart,
+                    selected = currentRoute == Routes.FavoritesRoute.patch,
+                ) {
+                    navController.navigate(FavoritesRoute) {
+                        popUpTo(FavoritesRoute) { inclusive = true }
+                    }
+                }
+                Spacer(Modifier.weight(3f))
+                Box(modifier = Modifier
+                    .size(48.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.primary,
+                        shape = CircleShape
+                    ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    FooterIcon(
+                        icon = R.drawable.bar_bag,
+                        allowChange = false,
+                        selected = currentRoute == Routes.CartRoute.patch,
+                    ) {
+                        navController.navigate(CartRoute) {
+                            popUpTo(CartRoute) { inclusive = true }
+                        }
+                    }
+                }
+                Spacer(Modifier.weight(3f))
+                FooterIcon(
+                    icon = R.drawable.bar_not,
+                    selected = currentRoute == Routes.NotificationRoute.patch,
+                ) {
+                    navController.navigate(NotificationRoute) {
+                        popUpTo(NotificationRoute) { inclusive = true }
+                    }
+                }
+                Spacer(Modifier.weight(2f))
+                FooterIcon(
+                    icon = R.drawable.bar_profile,
+                    selected = currentRoute == Routes.ProfileRoute.patch,
+                ) {
+                    navController.navigate(ProfileRoute) {
+                        popUpTo(ProfileRoute) { inclusive = true }
+                    }
+                }
             }
         }
     }

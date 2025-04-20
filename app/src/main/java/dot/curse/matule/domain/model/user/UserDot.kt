@@ -22,29 +22,18 @@ data class UserDot (
 fun UserDot.toUser(): User {
     return User(
         id = this.id?: -1,
-        firstName = this.firstName?: "null",
-        lastName = this.lastName?: "null",
-        email = this.email?: "null",
-        phone = this.phone?: "null",
-        password = this.password?: "null",
+        firstName = this.firstName?: "",
+        lastName = this.lastName?: "",
+        email = this.email?: "",
+        phone = this.phone?: "",
+        password = this.password?: "",
         paymentMethods = if (!this.paymentMethods.isNullOrEmpty()) {
             Json.decodeFromString<List<String>>(this.paymentMethods)
         } else {
             emptyList()
         },
-        avatar = this.avatar?: "null",
+        avatar = this.avatar?: "",
         date = serializeDateToString(convertToLocalDateTime(this.date!!))
     )
 }
 
-fun UserDot.notDefault(): Boolean {
-    return id != null ||
-            firstName != null ||
-            lastName != null ||
-            email != null ||
-            phone != null ||
-            password != null ||
-            paymentMethods != null ||
-            avatar != null ||
-            date != null
-}

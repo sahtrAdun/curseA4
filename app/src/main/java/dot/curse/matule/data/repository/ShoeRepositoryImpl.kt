@@ -9,6 +9,10 @@ import javax.inject.Inject
 class ShoeRepositoryImpl @Inject constructor(
     private val api: ApiRepository
 ) : ShoeRepository {
+    override suspend fun getShoeById(id: Int): Result<Shoe> {
+        return api.getShoeById(id).map { it.toShoe() }
+    }
+
     override suspend fun getUserFavorites(userId: Int): Result<List<Shoe>> {
         val response = api.getUserFavorites(userId)
         return response.map { shoeDot ->
@@ -41,6 +45,10 @@ class ShoeRepositoryImpl @Inject constructor(
     override suspend fun deleteShoeFromUserCart(userId: Int, shoeId: Int): Result<Boolean> {
         val response = api.deleteShoeFromUserCart(userId, shoeId)
         return response
+    }
+
+    override suspend fun clearUserCart(userId: Int): Result<Boolean> {
+        return api.clearUserCart(userId)
     }
 
     override suspend fun getAllShoe(): Result<List<Shoe>> {

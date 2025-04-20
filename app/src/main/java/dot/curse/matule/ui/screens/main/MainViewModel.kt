@@ -13,7 +13,8 @@ import dot.curse.matule.domain.model.shoe.ShoeCategory
 import dot.curse.matule.domain.model.shoe.ShoeTag
 import dot.curse.matule.domain.repository.ShoeRepository
 import dot.curse.matule.domain.repository.UserRepository
-import dot.curse.matule.ui.screens.searchresult.SearchResultState
+import dot.curse.matule.ui.utils.DetailRoute
+import dot.curse.matule.ui.utils.FilterRoute
 import dot.curse.matule.ui.utils.SearchResultRoute
 import dot.curse.matule.ui.utils.SearchRoute
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -57,7 +58,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun NavController.onFilterClick() {
-        // TODO
+        navigate(FilterRoute)
     }
 
     fun addToFavorite(shoe: Shoe) {
@@ -105,7 +106,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun NavController.shoeDetail(shoe: Shoe) {
-        // TODO
+        navigate(DetailRoute(shoe = Json.encodeToString<Shoe>(shoe)))
     }
 
     fun NavController.allShoes() {

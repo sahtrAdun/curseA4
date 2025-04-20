@@ -1,4 +1,4 @@
-package dot.curse.matule.ui.screens.favorites
+package dot.curse.matule.ui.screens.favorites.comp
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,6 +18,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import dot.curse.matule.ui.items.DummyShoeItem
 import dot.curse.matule.ui.items.ShoeItem
+import dot.curse.matule.ui.screens.favorites.FavoritesViewModel
 import dot.curse.matule.ui.utils.Adaptive
 
 @Composable
@@ -30,12 +31,13 @@ fun FavoritesScreen(
 
     Column(modifier = modifier
         .fillMaxSize()
-        .padding(horizontal = 20.dp, vertical = 20.dp),
+        .padding(horizontal = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Column(
             modifier = Adaptive()
-                .adaptiveElementWidthMedium(),
+                .adaptiveElementWidthMedium()
+                .padding(vertical = 20.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

@@ -11,8 +11,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -45,12 +43,13 @@ fun SearchResultScreen(
 
     Column(modifier = modifier
         .fillMaxSize()
-        .padding(horizontal = 20.dp, vertical = 20.dp),
+        .padding(horizontal = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Column(
             modifier = Adaptive()
-                .adaptiveElementWidthMedium(),
+                .adaptiveElementWidthMedium()
+                .padding(vertical = 20.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
