@@ -14,7 +14,7 @@ data class Notification(
 fun Notification.toNotificationPost(): NotificationPost {
     return NotificationPost(
         userId = userId,
-        label = null,
-        description = null
+        label = label,
+        description = description
     )
 }

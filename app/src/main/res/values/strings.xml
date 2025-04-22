@@ -112,4 +112,8 @@
     <string name="order_label_inf">Contact information</string>
     <string name="order_label_address">Address</string>
     <string name="order_label_payment">Payment method</string>
+    <string name="er_cart_empty">Cart is empty</string>
+    <string name="er_phone">Incorrect phone number</string>
+    <string name="er_adderss">Please provide the address</string>
+    <string name="er_payment">Specify the payment method</string>
 </resources>

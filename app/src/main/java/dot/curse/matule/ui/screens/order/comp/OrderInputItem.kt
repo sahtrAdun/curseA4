@@ -6,9 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -18,35 +16,37 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import dot.curse.matule.ui.items.EditableText
 
 @Composable
 fun OrderInputItem(
     icon: ImageVector,
     label: String,
-    value: String,
-    placeholder: String,
-    onValueChange: (String) -> Unit
+    editable: Boolean,
+    focus: FocusRequester? = null,
+    inputContent: @Composable (Boolean) -> Unit
 ) {
     var canEdit by remember { mutableStateOf(false) }
 
+    LaunchedEffect(canEdit) {
+        if (canEdit) focus?.requestFocus()
+    }
+
     Row(modifier = Modifier
-        .fillMaxWidth()
-        .height(40.dp),
+        .fillMaxWidth() ,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        /* Иконка */
         Box(modifier = Modifier
             .size(32.dp)
             .background(
@@ -64,33 +64,30 @@ fun OrderInputItem(
         }
         Row(modifier = Modifier
             .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            /* Значение */
-            Column(modifier = Modifier
-                .fillMaxHeight(),
-                verticalArrangement = Arrangement.SpaceBetween
+            Column(
+                verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
-                EditableText(
-                    initialText = value,
-                    placeholder = placeholder,
-                    onTextChanged = onValueChange,
-                    enabled = canEdit
-                )
-                Text(modifier = Modifier,
+                inputContent(canEdit && editable)
+                Text(
                     text = label,
-                    fontSize = 12.sp,
-                    color = Color.LightGray
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.outlineVariant
                 )
             }
-            /* Карандаш */
-            Icon(modifier = Modifier
-                .size(24.dp)
-                .clickable(null, null) { canEdit = !canEdit },
-                imageVector = if (!canEdit) Icons.Default.Create else Icons.Default.Check,
-                contentDescription = null,
-                tint = if (!canEdit) Color.Black else MaterialTheme.colorScheme.primary,
-            )
+            if (editable) {
+                Icon(modifier = Modifier
+                    .size(16.dp)
+                    .clickable(null, null) {
+                        canEdit = !canEdit
+                    },
+                    imageVector = if (!canEdit) Icons.Default.Create else Icons.Default.Check,
+                    contentDescription = null,
+                    tint = if (!canEdit) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.primary,
+                )
+            }
         }
     }
 }

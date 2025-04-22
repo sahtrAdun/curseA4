@@ -314,7 +314,7 @@ class MainActivity : ComponentActivity() {
                         composable<SettingsRoute> {
                             loading = false
                             menuVisible = false
-                            background = MaterialTheme.colorScheme.background
+                            background = MaterialTheme.colorScheme.surface
                             val viewModel = hiltViewModel<SettingsViewModel>()
 
                             SettingsScreen(
