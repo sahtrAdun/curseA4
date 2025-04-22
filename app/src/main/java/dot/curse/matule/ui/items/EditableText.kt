@@ -1,55 +1,70 @@
 package dot.curse.matule.ui.items
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun EditableText(
     modifier: Modifier = Modifier,
-    initialText: String = "",
-    placeholder: String,
+    text: String,
+    maxLength: Int = Int.MAX_VALUE,
+    height: Int = 30,
     onTextChanged: (String) -> Unit,
-    enabled: Boolean = true
+    placeholder: String,
+    enabled: Boolean = true,
+    type: KeyboardType = KeyboardType.Text,
+    imeAction: ImeAction = ImeAction.Next,
+    options: KeyboardOptions = KeyboardOptions(imeAction = imeAction, keyboardType = type),
+    action: KeyboardActions = KeyboardActions()
 ) {
-    var text by remember { mutableStateOf(initialText) }
-
+    val style = MaterialTheme.typography.bodySmall.copy(
+        color = MaterialTheme.colorScheme.onBackground,
+    )
     BasicTextField(
+        modifier = modifier.height(height.dp),
         value = text,
-        onValueChange = {
-            if (enabled) {
-                text = it
-                onTextChanged(it)
+        onValueChange = { value ->
+            if (value.length <= maxLength) {
+                onTextChanged(value)
             }
         },
-        textStyle = TextStyle(
-            color = MaterialTheme.colorScheme.onBackground, // Цвет текста
-            fontSize = 16.sp // Размер шрифта
-        ),
-        modifier = modifier,
+        textStyle = style,
+        enabled = enabled,
+        readOnly = !enabled,
+        keyboardOptions = options,
+        keyboardActions = action,
+        singleLine = true,
         decorationBox = { innerTextField ->
-            // Декорация для поля ввода
-            if (text.isEmpty()) {
-                Text(
-                    text = placeholder, // Placeholder
-                    style = TextStyle(
-                        color = Color.Black,
-                        fontSize = 14.sp
+            Box(modifier = Modifier
+                .fillMaxHeight()
+                .padding(vertical = 3.dp),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                innerTextField()
+                if (text.isEmpty()) {
+                    Text(
+                        text = placeholder,
+                        style = style.copy(color = MaterialTheme.colorScheme.outline),
+                        modifier = Modifier
+                            .padding(start = 2.dp)
                     )
-                )
-            } else {
-                innerTextField() // Отображаем введенный текст
+                }
             }
         },
-        cursorBrush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.primary) // Цвет курсора
+        cursorBrush = SolidColor(MaterialTheme.colorScheme.primary)
     )
 }

@@ -107,7 +107,9 @@ fun DetailScreen(
                 items(state.list) { item ->
                     if (state.shoe == Shoe()) {
                         ShimmerLoadingAnimation(
-                            modifier = Modifier.size(48.dp).clip(RoundedCornerShape(12.dp))
+                            modifier = Modifier
+                                .size(48.dp)
+                                .clip(RoundedCornerShape(12.dp))
                         )
                     } else {
                         MiniShoe(
@@ -125,7 +127,10 @@ fun DetailScreen(
             ) {
                 if (state.shoe == Shoe()) {
                     ShimmerLoadingAnimation(
-                        modifier = Modifier.height(60.dp).fillMaxWidth().clip(RoundedCornerShape(12.dp))
+                        modifier = Modifier
+                            .height(60.dp)
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(12.dp))
                     )
                 } else {
                     Text(
@@ -141,13 +146,16 @@ fun DetailScreen(
                         color = MaterialTheme.colorScheme.primary,
                         style = MaterialTheme.typography.bodyMedium,
                         textAlign = TextAlign.End,
-                        modifier = Modifier.fillMaxWidth().clickable(null, null) {
-                            viewModel.onDescriptionClick()
-                        }
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable(null, null) {
+                                viewModel.onDescriptionClick()
+                            }
                     )
                 }
 
             }
+            Spacer(Modifier.weight(1f))
             Row(modifier = Modifier
                 .fillMaxSize()
                 .padding(vertical = 25.dp),
@@ -157,10 +165,13 @@ fun DetailScreen(
                 Box(modifier = Modifier
                     .size(48.dp)
                     .background(
-                        color  = MaterialTheme.colorScheme.outline,
+                        color = MaterialTheme.colorScheme.outline,
                         shape = CircleShape
-                    ).clickable(null, null) {
-                        if (state.favorite) viewModel.deleteFromFavorite(state.shoe) else viewModel.addToFavorite(state.shoe)
+                    )
+                    .clickable(null, null) {
+                        if (state.favorite) viewModel.deleteFromFavorite(state.shoe) else viewModel.addToFavorite(
+                            state.shoe
+                        )
                     },
                     contentAlignment = Alignment.Center
                 ) {
@@ -179,7 +190,9 @@ fun DetailScreen(
                         shape = RoundedCornerShape(12.dp)
                     )
                     .clickable(null, null) {
-                        if (state.inCart) viewModel.deleteFromCart(state.shoe) else viewModel.addToCart(state.shoe)
+                        if (state.inCart) viewModel.deleteFromCart(state.shoe) else viewModel.addToCart(
+                            state.shoe
+                        )
                     },
                     contentAlignment = Alignment.Center
                 ) {

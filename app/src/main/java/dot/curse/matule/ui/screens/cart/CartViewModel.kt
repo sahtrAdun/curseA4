@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dot.curse.matule.R
 import dot.curse.matule.data.storage.SharedManager
 import dot.curse.matule.domain.model.order.Order
 import dot.curse.matule.domain.model.shoe.Shoe
@@ -13,6 +14,7 @@ import dot.curse.matule.domain.repository.ShoeRepository
 import dot.curse.matule.domain.repository.UserRepository
 import dot.curse.matule.ui.utils.CartRoute
 import dot.curse.matule.ui.utils.OrderRoute
+import dot.curse.matule.ui.utils.myToast
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -75,18 +77,24 @@ class CartViewModel @Inject constructor(
 
     fun NavController.onButtonClick() {
         viewModelScope.launch {
-            val order = Order(
-                userId = _state.value.user.id,
-                items = _state.value.items.map { it.id },
-                total = _state.value.totalPrice + _state.value.totalTax,
-                price = _state.value.totalPrice,
-                tax = _state.value.totalTax,
-                email = _state.value.user.email,
-                phone = _state.value.user.phone,
-                payment = if (_state.value.user.paymentMethods.isNotEmpty()) _state.value.user.paymentMethods.first() else ""
-            )
-            navigate(OrderRoute(order = Json.encodeToString<Order>(order))) {
-                popUpTo(CartRoute) { inclusive = true }
+            if (_state.value.items.isNotEmpty()) {
+                _state.update { it.copy(loading = true) }
+                val order = Order(
+                    userId = _state.value.user.id,
+                    items = _state.value.items.map { it.id },
+                    total = _state.value.totalPrice + _state.value.totalTax,
+                    price = _state.value.totalPrice,
+                    tax = _state.value.totalTax,
+                    email = _state.value.user.email,
+                    phone = _state.value.user.phone,
+                    payment = if (_state.value.user.paymentMethods.isNotEmpty()) _state.value.user.paymentMethods.first() else ""
+                )
+                navigate(OrderRoute(order = Json.encodeToString<Order>(order))) {
+                    popUpTo(CartRoute) { inclusive = true }
+                }
+                _state.update { it.copy(loading = false) }
+            } else {
+                context.myToast(context.getString(R.string.er_cart_empty))
             }
         }
     }

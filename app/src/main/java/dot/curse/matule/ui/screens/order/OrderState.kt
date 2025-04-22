@@ -9,6 +9,11 @@ data class OrderState(
     val user: User = User(),
     val order: Order = Order(),
     val items: List<Shoe> = emptyList<Shoe>(),
+    val email: String = "",
+    val emailError: String = "",
+    val phone: String = "",
+    val phoneError: String = "",
     val address: String = "",
+    val addressError: String = "",
     val payments: List<String> = emptyList(),
 )

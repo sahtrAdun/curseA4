@@ -111,4 +111,8 @@
     <string name="order_label_inf">Контактная информация</string>
     <string name="order_label_address">Адрес</string>
     <string name="order_label_payment">Способ оплаты</string>
+    <string name="er_cart_empty">Корзина пуста</string>
+    <string name="er_phone">Некорректный номер телефона</string>
+    <string name="er_adderss">Укажите адрес</string>
+    <string name="er_payment">Укажите способ оплаты</string>
 </resources>

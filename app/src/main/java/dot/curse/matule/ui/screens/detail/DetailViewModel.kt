@@ -16,6 +16,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 @HiltViewModel
@@ -111,8 +113,8 @@ class DetailViewModel @Inject constructor(
 
     fun NavController.onItemClick(shoe: Shoe) {
         if (shoe != _state.value.shoe) {
-            navigate(DetailRoute) {
-                popUpTo(DetailRoute) { inclusive = true }
+            navigate(DetailRoute(Json.encodeToString<Shoe>(shoe))) {
+                popUpTo(DetailRoute(Json.encodeToString<Shoe>(_state.value.shoe))) { inclusive = true }
             }
         }
     }
